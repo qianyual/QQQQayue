@@ -279,9 +279,11 @@ hr { border: none; border-top: 1px solid var(--line); margin: 16px 0; }
 .chapter-item .t .sub { display: block; font-size: 11.5px; color: var(--ink-3); margin-top: 1px; }
 .editor-wrap { display: flex; flex-direction: column; gap: 10px; }
 .editor-area {
-  /* 固定高度 + 内部滚动：避免每次输入都重排整页（原实现每次都量 scrollHeight） */
-  height: calc(100dvh - 250px);
-  min-height: 260px;
+  /* 高度由 fitEditorHeight() 实算后内联覆盖；这里的 46vh 只是脚本没跑到时的兜底。
+     不能用 dvh：旧版安卓 WebView 不认这个单位，整条声明失效会掉回 min-height，
+     正文框只剩三分之一屏（v1.8.0 真机上就是这个症状）。 */
+  height: 46vh;
+  min-height: 180px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   font-family: var(--editor-font, var(--font-serif));
@@ -418,7 +420,8 @@ body.immersive .topbar,
 body.immersive .editor-toolbar,
 body.immersive .bottom-nav { display: none; }
 body.immersive .page.editor-page { padding: 10px 12px 16px; }
-body.immersive .editor-area { height: calc(100dvh - 96px); }
+/* 沉浸模式工具栏已隐藏，高度交给 fitEditorHeight() 按整屏算 */
+body.immersive .editor-area { min-height: 0; }
 body.immersive .immersive-exit {
   display: inline-flex; align-items: center; gap: 4px;
   position: fixed; right: 14px; bottom: calc(var(--safe-b) + 16px); z-index: 60;

@@ -17,7 +17,7 @@ const State = {
   runState: null,       // {title, status}
 };
 
-const APP_VERSION = "1.8.0";
+const APP_VERSION = "1.8.1";
 
 const STAGE_NAMES = { planning: "规划（设定/架构/蓝图）", drafting: "写稿", review: "审稿", refinement: "润色/修稿" };
 
@@ -1382,7 +1382,7 @@ function viewChapter() {
     <div class="page editor-page">
       <div class="editor-wrap">
         ${b ? `<details class="card" style="padding:12px 15px;margin-bottom:10px"><summary class="tiny" style="cursor:pointer">本章蓝图 · ${esc(b.title || "（无标题）")}</summary><p class="muted" style="margin-top:8px;white-space:pre-wrap;font-size:13px">${esc(b.keyEvents || "")}</p>${b.suspenseHook ? `<p class="tiny" style="margin-top:6px">钩子：${esc(b.suspenseHook)}</p>` : ""}</details>` : ""}
-        <div class="card" style="padding:6px 14px 0;margin-bottom:0">
+        <div class="card editor-card" style="padding:6px 14px 0;margin-bottom:0">
           <textarea id="ch-editor" class="editor-area" placeholder="在这里写下正文，或用下方「AI 写本章」起稿…">${esc(c.content)}</textarea>
         </div>
       </div>
@@ -1407,6 +1407,30 @@ function viewChapter() {
     </div>`;
 }
 
+/* ============ 正文框高度：按可用区域实算 ============
+ * 原来写 height: calc(100dvh - 250px)，但 dvh 是 Chrome 108+ 才有的单位。
+ * 旧版安卓 WebView 不认，整条声明失效 → 掉回 min-height: 260px，
+ * 正文框只剩三分之一屏，下面是空的（v1.8.0 真机就是这个症状）。
+ * 改成量「顶部已占高度 + 底部工具栏高度」再分发，不再依赖视口单位：
+ * 蓝图条展开/折叠、沉浸模式、键盘弹出、横竖屏切换都能自适应。 */
+let edFitRaf = 0, edFitBound = false;
+function fitEditorHeight() {
+  const ed = $("#ch-editor");
+  if (!ed) return;
+  const bar = document.querySelector(".editor-toolbar");
+  const barShown = !!(bar && getComputedStyle(bar).display !== "none" && bar.offsetHeight > 0);
+  const vh = (window.visualViewport && window.visualViewport.height)
+    || window.innerHeight || document.documentElement.clientHeight;
+  const top = ed.getBoundingClientRect().top;
+  const bottom = barShown ? Math.min(bar.getBoundingClientRect().top, vh) : vh - 58;
+  const h = Math.max(180, Math.round(bottom - top - 12));
+  if (ed.style.height !== h + "px") ed.style.height = h + "px";
+}
+function scheduleFitEditor() {
+  if (edFitRaf) return;
+  edFitRaf = requestAnimationFrame(() => { edFitRaf = 0; fitEditorHeight(); });
+}
+
 function bindChapter() {
   const n = State.novel;
   const num = State.route.chNum;
@@ -1417,6 +1441,17 @@ function bindChapter() {
   /* 模式切换后某些按钮不存在，绑定用安全包装 */
   const on = (sel, fn) => { const el = $(sel); if (el) el.onclick = fn; };
   if (window.HUD) HUD.start(editor);
+
+  /* 先算一次正文框高度，再挂自适应监听（只挂一次，切页不重复绑） */
+  fitEditorHeight();
+  if (!edFitBound) {
+    edFitBound = true;
+    window.addEventListener("resize", scheduleFitEditor);
+    window.addEventListener("orientationchange", () => setTimeout(fitEditorHeight, 140));
+    if (window.visualViewport) window.visualViewport.addEventListener("resize", scheduleFitEditor);
+  }
+  const bpBox = document.querySelector(".editor-page details");
+  if (bpBox) bpBox.addEventListener("toggle", scheduleFitEditor);
 
   const updateChTag = () => {
     const t = $("#ch-status");
@@ -1443,7 +1478,11 @@ function bindChapter() {
   $("#btn-back").onclick = () => { saveNovel(true); goBack({ page: "novel", novelId: n.id, tab: "chapters" }); };
 
   /* ---- 沉浸写作模式（隐藏全部外壳，只留纸面） ---- */
-  const setImmersive = (on) => document.body.classList.toggle("immersive", on);
+  const setImmersive = (on) => {
+    document.body.classList.toggle("immersive", on);
+    /* 工具栏显隐会改变可用高度，等样式生效后重算 */
+    setTimeout(fitEditorHeight, 90);
+  };
   $("#ch-immersive").onclick = () => {
     setImmersive(true);
     toast("沉浸模式：点右上「退出沉浸」或按 Esc 返回");

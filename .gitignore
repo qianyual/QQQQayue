@@ -5,8 +5,8 @@ node_modules/
 # ---------- 构建产物 / 缓存 ----------
 build/
 .gradle/
-# dist/site 由 build.js 生成，可用 node build.js 复现
-dist/site/
+# 含斜杠的模式是相对仓库根锚定的，构建产物在子目录里，必须用 ** 前缀
+**/dist/
 # Playwright 复用的 Edge 用户目录
 .profile-*/
 last-shot.png
