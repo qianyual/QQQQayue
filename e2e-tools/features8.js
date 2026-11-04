@@ -231,7 +231,7 @@ const BASE = "http://127.0.0.1:4173";
   await page.evaluate(() => nav({ page: "settings" }));
   await page.waitForTimeout(500);
   const about = await page.evaluate(() => ({
-    ver: document.body.textContent.includes("1.8.0"),
+    ver: document.body.textContent.includes(APP_VERSION),
     storage: (document.querySelector("#st-storage") || {}).textContent || "",
     count: (document.querySelector("#st-novel-count") || {}).textContent || "",
     mat: !!document.querySelector("#st-mat"),

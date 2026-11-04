@@ -100,14 +100,16 @@ const t = (name, ok, extra) => { if (ok) { pass++; console.log("PASS | " + name)
   });
   t("T10 已定稿事实注入写章 prompt", injected.includes("连续性事实") && injected.includes("左臂受伤"), injected.slice(0, 80));
 
-  // T11 沉浸模式
+  // T11 沉浸模式（操作已收进右侧抽屉，先点胶囊唤出）
   await page.evaluate(() => { State.route = { page: "chapter", novelId: State.novel.id, chNum: 1 }; render(); });
   await page.waitForTimeout(600);
+  await page.click("#ch-tools");
+  await page.waitForTimeout(380);
   await page.click("#ch-immersive");
   await page.waitForTimeout(300);
   const immersive = await page.evaluate(() => document.body.classList.contains("immersive"));
   const toolbarHidden = await page.evaluate(() => {
-    const el = document.querySelector(".editor-toolbar");
+    const el = document.querySelector(".ed-drawer");
     return el ? getComputedStyle(el).display === "none" : false;
   });
   t("T11 沉浸模式隐藏外壳", immersive && toolbarHidden);

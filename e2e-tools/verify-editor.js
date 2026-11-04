@@ -38,11 +38,8 @@ const OUT = "C://Users//JiaoLong16Pro2025//WorkBuddy//2026-11-03-21-38-31//ui-sh
 
   const measure = () => p.evaluate(() => {
     const ed = document.getElementById("ch-editor");
-    const bar = document.querySelector(".editor-toolbar");
-    const page = document.querySelector(".page.editor-page");
-    const r = ed.getBoundingClientRect(), br = bar.getBoundingClientRect();
-    const card = document.querySelector(".editor-card");
-    const cr = card ? card.getBoundingClientRect() : r;
+    const r = ed.getBoundingClientRect();
+    const card = document.querySelector(".editor-card").getBoundingClientRect();
     const pg = document.querySelector(".page.editor-page");
     const cs = getComputedStyle(ed);
     const pcs = getComputedStyle(pg);
@@ -51,14 +48,9 @@ const OUT = "C://Users//JiaoLong16Pro2025//WorkBuddy//2026-11-03-21-38-31//ui-sh
       edTop: Math.round(r.top),
       edH: Math.round(r.height),
       edBottom: Math.round(r.bottom),
-      barTop: Math.round(br.top),
       paddingBottom: cs.paddingBottom,
-      cardBottom: Math.round(cr.bottom),
-      textBottom: Math.round(r.bottom),
-      gapCardToBar: Math.round(br.top - cr.bottom),
-      gapTextToBar: Math.round(br.top - r.bottom),
-      fillRatio: +(r.height / (br.top - r.top)).toFixed(3),
-      pageH: Math.round(pg.getBoundingClientRect().height),
+      cardBottom: Math.round(card.bottom),
+      fillRatio: +(r.height / (window.innerHeight - r.top)).toFixed(3),
       pagePadBottom: Math.round(parseFloat(pcs.paddingBottom)),
       supportsDvh: CSS.supports("height", "calc(100dvh - 250px)"),
     };

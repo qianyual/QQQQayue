@@ -1,5 +1,5 @@
 /* 书童移动版 — Service Worker：缓存壳，离线可用 */
-const CACHE = "anw-mobile-v5";
+const CACHE = "anw-mobile-v6";
 const ASSETS = [
   "./",
   "./index.html",

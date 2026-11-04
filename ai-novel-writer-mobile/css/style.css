@@ -293,17 +293,115 @@ hr { border: none; border-top: 1px solid var(--line); margin: 16px 0; }
   box-shadow: none;
 }
 .editor-area:focus { border: none; box-shadow: none; background: transparent; }
-.editor-toolbar {
-  position: fixed; left: 0; right: 0; bottom: calc(var(--nav-h) + var(--safe-b));
-  z-index: 20;
-  padding: 9px 12px 10px;
-  background: var(--bg); border-top: 1px solid var(--line);
+
+/* ================= 正文页：右上状态胶囊 + 右侧操作抽屉 ================= */
+/* 原来底部常驻两行按钮（查漏洞/润色/审稿/修稿/定稿/技能/历史）压掉一截正文，
+   现在全部收进右侧抽屉，顶栏只留一枚「模式 · 状态」胶囊。 */
+.ed-status-pill {
+  display: inline-flex; align-items: center; gap: 7px; flex: none;
+  height: 34px; padding: 0 9px 0 10px; border-radius: 999px;
+  background: var(--bg-elev); border: 1px solid var(--line);
+  color: var(--ink-2); box-shadow: none;
 }
-/* 主操作一行（写/续/润/审），次要操作一行（修/定稿/历史），不再横向滚动截断 */
-.et-row { display: flex; gap: 7px; }
-.et-row + .et-row { margin-top: 7px; }
-.et-row .btn { flex: 1 1 0; min-width: 0; padding-left: 4px; padding-right: 4px; }
-.et-row .btn span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ed-status-pill:active { transform: scale(.97); background: var(--bg-soft); }
+.ed-status-pill > i {
+  width: 6px; height: 6px; border-radius: 50%; flex: none;
+  background: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.ed-status-pill.assist > i { background: var(--ok); box-shadow: 0 0 0 3px var(--ok-soft); }
+.ed-status-pill .ed-status-txt { display: flex; align-items: baseline; gap: 5px; line-height: 1; }
+.ed-status-pill .ed-status-txt em {
+  font-style: normal; font-size: 10.5px; color: var(--ink-3); letter-spacing: .02em;
+}
+.ed-status-pill .ed-status-txt b { font-size: 12px; font-weight: 600; color: var(--ink); }
+.ed-status-pill[data-status="定稿"] .ed-status-txt b { color: var(--ok); }
+.ed-status-pill[data-status="已审"] .ed-status-txt b,
+.ed-status-pill[data-status="已修"] .ed-status-txt b { color: var(--accent); }
+.ed-status-pill svg { color: var(--ink-3); }
+
+.ed-drawer-mask {
+  position: fixed; inset: 0; z-index: 74;
+  background: rgba(18, 15, 11, .42);
+  opacity: 0; pointer-events: none;
+  transition: opacity .24s ease;
+}
+body.ed-drawer-open .ed-drawer-mask { opacity: 1; pointer-events: auto; }
+/* 抽屉打开时锁住页面滚动，避免遮罩后面的正文跟着滑 */
+body.ed-drawer-open { overflow: hidden; }
+.ed-drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; z-index: 75;
+  width: min(86vw, 340px);
+  display: flex; flex-direction: column;
+  background: var(--bg-elev);
+  border-left: 1px solid var(--line);
+  border-radius: 22px 0 0 22px;
+  box-shadow: -28px 0 64px -32px rgba(27, 25, 21, .55);
+  padding-top: calc(var(--safe-t) + 12px);
+  padding-bottom: calc(var(--safe-b) + 10px);
+  transform: translateX(103%);
+  transition: transform .28s cubic-bezier(.32, .72, .24, 1);
+  will-change: transform;
+}
+body.ed-drawer-open .ed-drawer { transform: translateX(0); }
+.ed-drawer-head {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 4px 12px 12px 18px; border-bottom: 1px solid var(--line);
+}
+.ed-drawer-ht { flex: 1; min-width: 0; }
+.ed-drawer-title {
+  font-family: var(--font-serif); font-size: 15px; line-height: 1.4;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ed-drawer-sub { font-size: 11.5px; color: var(--ink-3); margin-top: 3px; }
+.ed-drawer-scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 2px 14px 20px; }
+.ed-group { margin-top: 16px; }
+.ed-group-label {
+  font-size: 10.5px; letter-spacing: .12em; color: var(--ink-3);
+  margin: 0 2px 8px; text-transform: uppercase;
+}
+.ed-op {
+  display: flex; align-items: center; gap: 11px; width: 100%;
+  text-align: left; padding: 10px 11px; margin-bottom: 7px;
+  border-radius: 14px; border: 1px solid var(--line); background: var(--bg);
+  color: var(--ink);
+  transition: background .16s ease, transform .12s ease;
+}
+.ed-op:active { transform: scale(.985); background: var(--bg-soft); }
+.ed-op > svg:last-child { color: var(--ink-3); opacity: .7; flex: none; }
+.ed-op .ed-op-ico {
+  width: 34px; height: 34px; border-radius: 11px; flex: none;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg-soft); color: var(--ink-2);
+}
+.ed-op.primary { border-color: var(--accent); background: var(--accent-soft); }
+.ed-op.primary .ed-op-ico { background: var(--accent); color: var(--accent-ink); }
+.ed-op .ed-op-txt { flex: 1; min-width: 0; }
+.ed-op .ed-op-txt b { display: block; font-size: 13.5px; font-weight: 600; }
+.ed-op .ed-op-txt small {
+  display: block; font-size: 11px; color: var(--ink-3); margin-top: 2px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ed-mode-toggle {
+  display: flex; align-items: center; gap: 10px; width: 100%;
+  padding: 11px 12px; border-radius: 14px;
+  border: 1px solid var(--line-strong); background: var(--bg);
+  color: var(--ink-2);
+}
+.ed-mode-toggle:active { transform: scale(.985); }
+.ed-mode-main { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: var(--ink); }
+.ed-mode-main i { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+.ed-mode-toggle.assist .ed-mode-main i { background: var(--ok); }
+.ed-mode-hint { flex: 1; text-align: right; font-size: 11px; color: var(--ink-3); }
+.ed-bp {
+  margin-top: 9px; padding: 11px 13px; border-radius: 14px;
+  border: 1px dashed var(--line-strong); background: var(--bg);
+}
+.ed-bp summary { font-size: 12px; color: var(--ink-2); cursor: pointer; }
+.ed-bp p { margin-top: 8px; font-size: 12.5px; color: var(--ink-2); line-height: 1.75; white-space: pre-wrap; }
+.ed-bp .tiny { margin-top: 6px; }
+
+/* 正文页不再需要给底部工具栏留位置，正文框直接吃满到屏幕底 */
+.page.editor-page { padding-bottom: calc(var(--safe-b) + 10px); }
 
 /* ================= 蓝图 ================= */
 .bp-item {
@@ -330,7 +428,7 @@ hr { border: none; border-top: 1px solid var(--line); margin: 16px 0; }
 
 /* ================= 弹层 / Toast / 运行条 ================= */
 .sheet-mask {
-  position: fixed; inset: 0; background: rgba(18, 15, 11, .5); z-index: 50;
+  position: fixed; inset: 0; background: rgba(18, 15, 11, .5); z-index: 80;
   display: flex; align-items: flex-end; animation: fadeIn .18s;
 }
 .sheet {
@@ -390,8 +488,7 @@ hr { border: none; border-top: 1px solid var(--line); margin: 16px 0; }
   margin-right: 2px;
 }
 
-/* 编辑区底部留白，避免被工具栏遮住 */
-.page.editor-page { padding-bottom: calc(var(--nav-h) + var(--safe-b) + 62px); }
+/* 编辑区底部留白由抽屉方案接管（见 .page.editor-page） */
 
 /* ================= 角色 ================= */
 .avatar {
@@ -417,7 +514,8 @@ hr { border: none; border-top: 1px solid var(--line); margin: 16px 0; }
 /* ================= 沉浸写作 ================= */
 .immersive-exit { display: none; }
 body.immersive .topbar,
-body.immersive .editor-toolbar,
+body.immersive .ed-drawer,
+body.immersive .ed-drawer-mask,
 body.immersive .bottom-nav { display: none; }
 body.immersive .page.editor-page { padding: 10px 12px 16px; }
 /* 沉浸模式工具栏已隐藏，高度交给 fitEditorHeight() 按整屏算 */

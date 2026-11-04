@@ -17,7 +17,7 @@ const State = {
   runState: null,       // {title, status}
 };
 
-const APP_VERSION = "1.8.1";
+const APP_VERSION = "1.8.2";
 
 const STAGE_NAMES = { planning: "规划（设定/架构/蓝图）", drafting: "写稿", review: "审稿", refinement: "润色/修稿" };
 
@@ -158,10 +158,13 @@ function modePill() {
     <i></i><span>AI ${modeLabel()}</span></button>`;
 }
 function toggleMode() {
+  const keepDrawer = document.body.classList.contains("ed-drawer-open");
   State.settings.aiMode = isAssistMode() ? "auto" : "assist";
   DB.kvSet("settings", State.settings);
   if (State.runState) { try { State.runState.ctrl.abort(); } catch (e) {} }
   render();
+  /* 从抽屉里切的模式，切完抽屉留在原地，可以直接接着点操作 */
+  if (keepDrawer) setTimeout(() => setEdDrawer(true), 0);
   toast(isAssistMode()
     ? "AI 辅助模式：只查不写，起稿与续写已关闭"
     : "AI 创作模式：起稿、续写已开放");
@@ -204,7 +207,8 @@ function applyRoute(route) {
   State.route = route;
   if (route.page !== "chapter") {
     State.editorSel = null;
-    document.body.classList.remove("immersive");
+    State._edDrawerOpen = false;
+    document.body.classList.remove("immersive", "ed-drawer-open");
   }
   window.scrollTo(0, 0);
   render();
@@ -266,6 +270,11 @@ let backArmedAt = 0;
 function closeTopLayer() {
   const layer = $("#modal-layer");
   if (layer && layer.innerHTML.trim()) { closeSheet(); return true; }
+  if (typeof isEdDrawerOpen === "function" && isEdDrawerOpen()) {
+    State._edDrawerOpen = false;
+    setEdDrawer(false);
+    return true;
+  }
   if (document.body.classList.contains("immersive")) {
     document.body.classList.remove("immersive");
     return true;
@@ -1373,57 +1382,145 @@ function viewChapter() {
   const headTitle = rawTitle.replace(dupPrefix, "").trim()
     ? `第${num}章 ${rawTitle.replace(dupPrefix, "").trim()}`
     : `第${num}章`;
+  /* 操作全部收进右侧抽屉：正文区不再被两行按钮压掉一截。
+     顶栏只留一枚「模式 · 状态」胶囊，点开抽屉才看得到按钮。 */
+  const assist = isAssistMode();
+  const words = c.wordCount || countWords(c.content || "");
+  const canFinalize = (c.content || "").trim() && c.status !== "定稿";
+  const ops = assist
+    ? [["ed-check", "shield", "查漏洞", "逻辑、伏笔、设定冲突", 1],
+       ["ed-polish", "pen", "润色", "只改表达，不添情节", 0],
+       ["ed-review", "check", "审稿", "按维度打分并给修改项", 0]]
+    : [["ed-write", "spark", "AI 写本章", "按蓝图与章纲起稿", 1],
+       ["ed-continue", "arrowRight", "续写", "接着正文往下写", 0],
+       ["ed-polish", "pen", "润色", "只改表达，不添情节", 0],
+       ["ed-review", "check", "审稿", "按维度打分并给修改项", 0]];
+  const opHTML = ops.map(([id, ico, name, hint, pri]) => `
+        <button class="ed-op${pri ? " primary" : ""}" id="${id}">
+          <span class="ed-op-ico">${svgIcon(ico, 16)}</span>
+          <span class="ed-op-txt"><b>${name}</b><small>${hint}</small></span>
+          ${svgIcon("arrowRight", 14)}
+        </button>`).join("");
   return `
     ${topbar(headTitle, {
       back: true,
-      right: `<div class="tb-actions">${modePill()}<button class="icon-btn" id="ch-immersive" title="沉浸写作">${svgIcon("eye", 18)}</button><span class="tag ${c.status === "定稿" ? "ok" : c.status === "草稿" ? "" : "accent"}" id="ch-status">${esc(c.status)}</span></div>`,
+      right: `<button class="ed-status-pill ${assist ? "assist" : "create"}" id="ch-tools" data-status="${esc(c.status)}" aria-label="本章状态与操作">
+        <i></i><span class="ed-status-txt"><em>${modeLabel()}</em><b id="ch-status">${esc(c.status)}</b></span>${svgIcon("sliders", 15)}
+      </button>`,
     })}
     <button class="immersive-exit" id="ch-exit-immersive">${svgIcon("close", 14)} 退出沉浸</button>
     <div class="page editor-page">
       <div class="editor-wrap">
-        ${b ? `<details class="card" style="padding:12px 15px;margin-bottom:10px"><summary class="tiny" style="cursor:pointer">本章蓝图 · ${esc(b.title || "（无标题）")}</summary><p class="muted" style="margin-top:8px;white-space:pre-wrap;font-size:13px">${esc(b.keyEvents || "")}</p>${b.suspenseHook ? `<p class="tiny" style="margin-top:6px">钩子：${esc(b.suspenseHook)}</p>` : ""}</details>` : ""}
         <div class="card editor-card" style="padding:6px 14px 0;margin-bottom:0">
-          <textarea id="ch-editor" class="editor-area" placeholder="在这里写下正文，或用下方「AI 写本章」起稿…">${esc(c.content)}</textarea>
+          <textarea id="ch-editor" class="editor-area" placeholder="在这里写下正文，点右上角状态胶囊用 AI 起稿…">${esc(c.content)}</textarea>
         </div>
       </div>
     </div>
-    <div class="editor-toolbar">
-      <div class="et-row">
-        ${isAssistMode()
-          ? `<button class="btn small primary" id="ed-check">${svgIcon("shield", 15)}<span>查漏洞</span></button>
-             <button class="btn small" id="ed-polish">${svgIcon("pen", 15)}<span>润色</span></button>
-             <button class="btn small" id="ed-review">${svgIcon("check", 15)}<span>审稿</span></button>`
-          : `<button class="btn small primary" id="ed-write">${svgIcon("spark", 15)}<span>AI 写本章</span></button>
-             <button class="btn small" id="ed-continue">${svgIcon("arrowRight", 15)}<span>续写</span></button>
-             <button class="btn small" id="ed-polish">${svgIcon("pen", 15)}<span>润色</span></button>
-             <button class="btn small" id="ed-review">${svgIcon("check", 15)}<span>审稿</span></button>`}
+    <div class="ed-drawer-mask" id="ed-drawer-mask"></div>
+    <aside class="ed-drawer" id="ed-drawer" aria-hidden="true">
+      <div class="ed-drawer-head">
+        <div class="ed-drawer-ht">
+          <div class="ed-drawer-title">${esc(headTitle)}</div>
+          <div class="ed-drawer-sub"><span id="ed-words">${words} 字</span> · <span id="ed-status-2">${esc(c.status)}</span></div>
+        </div>
+        <button class="icon-btn" id="ed-drawer-close" aria-label="收起">${svgIcon("close", 18)}</button>
       </div>
-      <div class="et-row">
-        <button class="btn small" id="ed-refine">${svgIcon("refresh", 15)}<span>修稿</span></button>
-        <button class="btn small ${(c.content || "").trim() && c.status !== "定稿" ? "primary" : ""}" id="ed-finalize">${svgIcon("flag", 15)}<span>定稿</span></button>
-        <button class="btn small" id="ed-skills">${svgIcon("layers", 15)}<span>技能</span></button>
-        <button class="btn small" id="ed-history">${svgIcon("clock", 15)}<span>历史</span></button>
+      <div class="ed-drawer-scroll">
+        <div class="ed-group">
+          <div class="ed-group-label">AI 模式</div>
+          <button class="ed-mode-toggle ${assist ? "assist" : "create"}" id="btn-mode">
+            <span class="ed-mode-main"><i></i>${assist ? "辅助模式" : "创作模式"}</span>
+            <span class="ed-mode-hint">${assist ? "只查不写" : "可起稿 · 续写"}</span>
+          </button>
+        </div>
+        <div class="ed-group">
+          <div class="ed-group-label">AI 处理</div>
+          ${opHTML}
+        </div>
+        <div class="ed-group">
+          <div class="ed-group-label">稿件</div>
+          <button class="ed-op" id="ed-refine">
+            <span class="ed-op-ico">${svgIcon("refresh", 16)}</span>
+            <span class="ed-op-txt"><b>修稿</b><small>按审稿意见批量改写</small></span>
+            ${svgIcon("arrowRight", 14)}
+          </button>
+          <button class="ed-op" id="ed-finalize">
+            <span class="ed-op-ico">${svgIcon("flag", 16)}</span>
+            <span class="ed-op-txt"><b>定稿</b><small>${canFinalize ? "锁定本章并标记完成" : c.status === "定稿" ? "本章已是定稿" : "正文为空，先写再定稿"}</small></span>
+            ${svgIcon("arrowRight", 14)}
+          </button>
+          <button class="ed-op" id="ed-skills">
+            <span class="ed-op-ico">${svgIcon("layers", 16)}</span>
+            <span class="ed-op-txt"><b>技能</b><small>写作技能与风格模板</small></span>
+            ${svgIcon("arrowRight", 14)}
+          </button>
+          <button class="ed-op" id="ed-history">
+            <span class="ed-op-ico">${svgIcon("clock", 16)}</span>
+            <span class="ed-op-txt"><b>历史版本</b><small>回滚到之前的稿子</small></span>
+            ${svgIcon("arrowRight", 14)}
+          </button>
+        </div>
+        <div class="ed-group">
+          <div class="ed-group-label">视图</div>
+          <button class="ed-op" id="ch-immersive">
+            <span class="ed-op-ico">${svgIcon("eye", 16)}</span>
+            <span class="ed-op-txt"><b>沉浸写作</b><small>隐藏全部外壳，只留纸面</small></span>
+            ${svgIcon("arrowRight", 14)}
+          </button>
+          ${b ? `<details class="ed-bp">
+            <summary>本章蓝图 · ${esc(b.title || "（无标题）")}</summary>
+            <p>${esc(b.keyEvents || "")}</p>
+            ${b.suspenseHook ? `<p class="tiny">钩子：${esc(b.suspenseHook)}</p>` : ""}
+          </details>` : ""}
+        </div>
       </div>
-    </div>`;
+    </aside>`;
 }
+
+/* 抽屉开合：右上角胶囊唤出，遮罩/返回键/右上关闭都能收起 */
+function setEdDrawer(open) {
+  const d = $("#ed-drawer");
+  if (!d) { document.body.classList.remove("ed-drawer-open"); return; }
+  document.body.classList.toggle("ed-drawer-open", !!open);
+  d.setAttribute("aria-hidden", open ? "false" : "true");
+  if (open) {
+    const s = $(".ed-drawer-scroll");
+    if (s) s.scrollTop = 0;
+  } else {
+    const a = document.activeElement;
+    if (a && d.contains(a)) try { a.blur(); } catch (e) {}
+  }
+}
+function isEdDrawerOpen() { return document.body.classList.contains("ed-drawer-open"); }
 
 /* ============ 正文框高度：按可用区域实算 ============
  * 原来写 height: calc(100dvh - 250px)，但 dvh 是 Chrome 108+ 才有的单位。
  * 旧版安卓 WebView 不认，整条声明失效 → 掉回 min-height: 260px，
  * 正文框只剩三分之一屏，下面是空的（v1.8.0 真机就是这个症状）。
- * 改成量「顶部已占高度 + 底部工具栏高度」再分发，不再依赖视口单位：
- * 蓝图条展开/折叠、沉浸模式、键盘弹出、横竖屏切换都能自适应。 */
+ * v1.8.2 起底部操作栏收进右侧抽屉，正文框直接量到屏幕底部（只留安全区），
+ * 沉浸模式额外留 58px 给「退出沉浸」浮钮。 */
 let edFitRaf = 0, edFitBound = false;
+/* env() 在 getComputedStyle 里读不出像素值，用一个探针 div 实测安全区高度 */
+let _safeB = null;
+function safeBottomPx() {
+  if (_safeB != null) return _safeB;
+  const p = document.createElement("div");
+  p.style.cssText = "position:fixed;left:0;bottom:0;width:1px;height:env(safe-area-inset-bottom,0px);visibility:hidden;pointer-events:none";
+  document.body.appendChild(p);
+  const h = p.getBoundingClientRect().height;
+  p.remove();
+  _safeB = Math.round(h) || 0;
+  return _safeB;
+}
 function fitEditorHeight() {
   const ed = $("#ch-editor");
   if (!ed) return;
-  const bar = document.querySelector(".editor-toolbar");
-  const barShown = !!(bar && getComputedStyle(bar).display !== "none" && bar.offsetHeight > 0);
   const vh = (window.visualViewport && window.visualViewport.height)
     || window.innerHeight || document.documentElement.clientHeight;
   const top = ed.getBoundingClientRect().top;
-  const bottom = barShown ? Math.min(bar.getBoundingClientRect().top, vh) : vh - 58;
-  const h = Math.max(180, Math.round(bottom - top - 12));
+  const immersive = document.body.classList.contains("immersive");
+  const bottom = vh - (immersive ? 58 : safeBottomPx() + 10);
+  const h = Math.max(180, Math.round(bottom - top));
   if (ed.style.height !== h + "px") ed.style.height = h + "px";
 }
 function scheduleFitEditor() {
@@ -1450,13 +1547,34 @@ function bindChapter() {
     window.addEventListener("orientationchange", () => setTimeout(fitEditorHeight, 140));
     if (window.visualViewport) window.visualViewport.addEventListener("resize", scheduleFitEditor);
   }
-  const bpBox = document.querySelector(".editor-page details");
-  if (bpBox) bpBox.addEventListener("toggle", scheduleFitEditor);
+  /* 抽屉里没有会影响正文框高度的元素，蓝图 details 展开只滚抽屉自身 */
 
   const updateChTag = () => {
     const t = $("#ch-status");
-    if (t) { t.textContent = c.status; t.className = "tag" + (c.status === "定稿" ? " ok" : (c.status === "草稿" || c.status === "待写") ? "" : " accent"); }
+    if (t) t.textContent = c.status;
+    const pill = $("#ch-tools");
+    if (pill) pill.dataset.status = c.status;
+    const t2 = $("#ed-status-2");
+    if (t2) t2.textContent = c.status;
   };
+  const updateWords = () => {
+    const w = $("#ed-words");
+    if (w) w.textContent = countWords(c.content || "") + " 字";
+  };
+
+  /* ---- 右侧操作抽屉 ---- */
+  setEdDrawer(State._edDrawerOpen === true);
+  State._edDrawerOpen = false;
+  on("#ch-tools", () => { State._edDrawerOpen = true; setEdDrawer(true); });
+  on("#ed-drawer-close", () => { State._edDrawerOpen = false; setEdDrawer(false); });
+  on("#ed-drawer-mask", () => { State._edDrawerOpen = false; setEdDrawer(false); });
+  /* 抽屉里的操作点完就收起，把屏幕还给正文（handler 先跑，收起放下一帧） */
+  $$(".ed-op", $("#ed-drawer") || document).forEach(btn => {
+    btn.addEventListener("click", () => setTimeout(() => {
+      State._edDrawerOpen = false;
+      setEdDrawer(false);
+    }, 0));
+  });
 
   /* 输入处理：节流到每帧最多一次，避免每次按键都做 DOM 写入与重排（卡顿主因之一） */
   let pendingFrame = 0, dirty = false;
@@ -1469,6 +1587,7 @@ function bindChapter() {
       c.wordCount = countWords(c.content);
       c.updatedAt = Date.now();
       if (c.status === "定稿" || c.status === "已审" || c.status === "已修") { c.status = "草稿"; updateChTag(); }
+      updateWords();
       saveNovel();
     });
   });
@@ -1479,17 +1598,22 @@ function bindChapter() {
 
   /* ---- 沉浸写作模式（隐藏全部外壳，只留纸面） ---- */
   const setImmersive = (on) => {
+    if (on) { State._edDrawerOpen = false; setEdDrawer(false); }
     document.body.classList.toggle("immersive", on);
-    /* 工具栏显隐会改变可用高度，等样式生效后重算 */
+    /* 外壳显隐会改变可用高度，等样式生效后重算 */
     setTimeout(fitEditorHeight, 90);
   };
   $("#ch-immersive").onclick = () => {
     setImmersive(true);
-    toast("沉浸模式：点右上「退出沉浸」或按 Esc 返回");
+    toast("沉浸模式：点「退出沉浸」或按 Esc 返回");
   };
   $("#ch-exit-immersive").onclick = () => setImmersive(false);
   if (State._escHandler) document.removeEventListener("keydown", State._escHandler);
-  State._escHandler = (e) => { if (e.key === "Escape") setImmersive(false); };
+  State._escHandler = (e) => {
+    if (e.key !== "Escape") return;
+    if (isEdDrawerOpen()) { State._edDrawerOpen = false; setEdDrawer(false); return; }
+    setImmersive(false);
+  };
   document.addEventListener("keydown", State._escHandler);
 
   /* ---- AI 写本章（重写前自动把原稿存入历史，无需弹确认） ---- */

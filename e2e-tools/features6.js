@@ -71,6 +71,8 @@ const BASE = "http://127.0.0.1:4173";
   const hasEntry = await page.evaluate(() => !!document.querySelector("#ed-skills"));
   t("T3 正文页工具栏有技能入口", hasEntry);
 
+  await page.click("#ch-tools");
+  await page.waitForTimeout(380);
   await page.click("#ed-skills");
   await page.waitForTimeout(400);
   const sheetInfo = await page.evaluate(() => ({
@@ -140,6 +142,8 @@ const BASE = "http://127.0.0.1:4173";
   await page.waitForTimeout(500);
 
   /* T9 自建技能 */
+  await page.click("#ch-tools");
+  await page.waitForTimeout(380);
   await page.click("#ed-skills");
   await page.waitForTimeout(350);
   await page.click("#sk-new");

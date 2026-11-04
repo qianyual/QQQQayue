@@ -2,11 +2,11 @@
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Android-8.0%2B-3ddc84.svg)](#)
-[![Version](https://img.shields.io/badge/version-1.8.0-a2402c.svg)](#版本)
+[![Version](https://img.shields.io/badge/version-1.8.2-a2402c.svg)](#版本)
 
 把 [EthanYoQ/AI-Novel-Writer](https://github.com/EthanYoQ/AI-Novel-Writer)（Electron + React 19 + SQLite + LanceDB 的桌面写作软件）重新实现成**手机原生 App**：不是网页套壳，是 Capacitor 8 打包的 Android 安装包，返回键、状态栏、字体渲染、离线存储全部按手机习惯重做。经原作者同意发布，遵循同样的 GPL-3.0 协议。
 
-当前版本 **v1.8.0**（versionCode 9）· 1080×1920 竖屏优先 · 完全离线可用。
+当前版本 **v1.8.2**（versionCode 11）· 1080×1920 竖屏优先 · 完全离线可用。
 
 <p align="center">
   <img src="ui-shots/vid-shelf.png" width="200" alt="书架">
@@ -52,7 +52,7 @@
 技能输出分三型：**issue-JSON**（可勾选采纳的问题清单）、**prose-Markdown**（成段建议）、**blueprint**（结构化章纲）。审查结果勾选后可一键 `refineFromReview` 自动复验，形成"审 → 改 → 复验"闭环。
 
 ### 章纲罗盘（悬浮窗）
-写作时随时拉出来的本章作战面板：字数目标、本章目的、关键事件、结尾钩子、可勾选的节拍（`beats[{text,done}]`）、待埋伏笔、待收线索、张力五星、AI 拆章。收起后不占屏幕，展开时遮罩挂 `body` 层（`z-index: 40`，浮窗 41），不会挡住工具栏。
+写作时随时拉出来的本章作战面板：字数目标、本章目的、关键事件、结尾钩子、可勾选的节拍（`beats[{text,done}]`）、待埋伏笔、待收线索、张力五星、AI 拆章。收起后不占屏幕，展开时遮罩挂 `body` 层（`z-index: 40`，浮窗 41），不会挡住右侧操作抽屉。
 
 ### 码字仪表
 和番茄钟相反的思路——**不打断你**。
@@ -121,7 +121,7 @@
 - **前端**：原生 JavaScript（无框架）、CSS 变量主题、IndexedDB、Service Worker 离线缓存
 - **原生**：Capacitor 8、Android SDK 36、Gradle 8
 - **打包**：AGP + apksigner（v2 签名）
-- **测试**：Playwright（复用本机 Edge）+ 自建 135 项端到端用例
+- **测试**：Playwright（复用本机 Edge）+ 自建 151 项端到端用例
 
 ## 目录
 
@@ -194,12 +194,14 @@ node features7.js    # 14 项
 node features8.js    # 19 项
 ```
 
-合计 **135 项**，覆盖启动、路由、AI 闸门、技能输出解析、罗盘蓝图、仪表计时、BM25 召回、返回栈、导出格式。
+合计 **151 项**，覆盖启动、路由、AI 闸门、技能输出解析、罗盘蓝图、仪表计时、BM25 召回、返回栈、导出格式、正文页抽屉与占屏比例。
 
 ## 版本
 
 | 版本 | 内容 |
 | --- | --- |
+| v1.8.2 | 正文页操作收进右侧抽屉，正文框吃满整屏（占屏 90%）；修复旧 WebView 高度塌陷 |
+| v1.8.1 | 正文框高度改为实算，修正 .gitignore/.gitattributes |
 | v1.8 | 资料库（BM25）、全书搜索、章节行内操作、线索时间线、数据体检 |
 | v1.7 | 安卓返回键接管、统一页面栈 |
 | v1.6 | 16 技能库、章纲罗盘悬浮窗 |
