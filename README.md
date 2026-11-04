@@ -1,6 +1,10 @@
 # 书童 Pagekin · 安卓版
 
-把 [EthanYoQ/AI-Novel-Writer](https://github.com/EthanYoQ/AI-Novel-Writer)（Electron + React 19 + SQLite + LanceDB 的桌面写作软件）重新实现成**手机原生 App**：不是网页套壳，是 Capacitor 8 打包的 Android 安装包，返回键、状态栏、字体渲染、离线存储全部按手机习惯重做。
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/Android-8.0%2B-3ddc84.svg)](#)
+[![Version](https://img.shields.io/badge/version-1.8.0-a2402c.svg)](#版本)
+
+把 [EthanYoQ/AI-Novel-Writer](https://github.com/EthanYoQ/AI-Novel-Writer)（Electron + React 19 + SQLite + LanceDB 的桌面写作软件）重新实现成**手机原生 App**：不是网页套壳，是 Capacitor 8 打包的 Android 安装包，返回键、状态栏、字体渲染、离线存储全部按手机习惯重做。经原作者同意发布，遵循同样的 GPL-3.0 协议。
 
 当前版本 **v1.8.0**（versionCode 9）· 1080×1920 竖屏优先 · 完全离线可用。
 
@@ -203,12 +207,26 @@ node features8.js    # 19 项
 | v1.4 | 逐段合并、词级 diff、关系图谱、命令面板、外观设置、分章导出 |
 | v1.0–1.3 | 书架、编辑器、Blueprint、角色、AI 生成、导入导出 |
 
-## 说明
+## 来源与协议
 
-本项目是**独立重写**，不是上游代码的移植或分支。界面结构与交互逻辑参考了上游的设计思路，实现全部重写；检索、存储、渲染三处核心机制因为平台限制换成了不同方案（见上表）。
+本项目是 [EthanYoQ/AI-Novel-Writer](https://github.com/EthanYoQ/AI-Novel-Writer)（书童，作者：一醉桂花酒）的安卓移植版，**经原作者同意发布**，并按原作要求遵循**同样的开源协议 GPL-3.0**。
 
-上游项目版权归其作者所有。本仓库不含上游代码，也不含任何第三方版权音频——介绍视频里的配乐是脚本合成的原创鼓点。
+原作是面向长篇小说与网文连载的桌面写作软件，技术栈为 Electron + React 19 + SQLite + LanceDB。本项目并非把桌面端直接塞进手机，而是重新组织同一套工作流——书架、Blueprint 章纲、角色、审稿技能、资料检索、导出——全部按竖屏和单手操作重排。
+
+因为平台限制，三处核心机制换成了不同实现（见上文对照表）：SQLite → IndexedDB、LanceDB 向量检索 → 中文 2-gram BM25、Electron 主进程 → 纯前端 + Capacitor 桥。界面结构与交互设计承袭原作思路，已获原作者授权。
+
+### GPL-3.0 对你的实际含义
+
+- 可以自由使用、修改、分发本软件，商用也可以；
+- 如果修改后再发布（包括打包成安装包分发），**必须**同样以 GPL-3.0 公开你的完整源代码，保留原作者署名与本协议文本；
+- 不提供任何担保。
+
+作者与原项目的版权归原作者所有。介绍视频里的配乐由脚本合成，不含任何第三方版权音频。
 
 ## License
 
-MIT
+[GNU GENERAL PUBLIC LICENSE v3.0](LICENSE)
+
+Copyright (C) 2026 Pagekin Mobile contributors
+
+Based on [AI-Novel-Writer](https://github.com/EthanYoQ/AI-Novel-Writer) by 一醉桂花酒, licensed under GPL-3.0.
