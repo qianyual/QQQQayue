@@ -1,0 +1,56 @@
+# ---------- 依赖 ----------
+node_modules/
+.pnpm-store/
+
+# ---------- 构建产物 / 缓存 ----------
+build/
+.gradle/
+# dist/site 由 build.js 生成，可用 node build.js 复现
+dist/site/
+# Playwright 复用的 Edge 用户目录
+.profile-*/
+last-shot.png
+*.log
+.cache/
+tmp/
+chk/
+chk2/
+prev/
+preview/
+check/
+
+# ---------- Android ----------
+shutong-android/www/
+shutong-android/android/app/build/
+shutong-android/android/capacitor-cordova-android-plugins/
+shutong-android/android/local.properties
+*.apk
+*.aab
+*.jks
+*.keystore
+!shutong-android/shutong-release.keystore.sample
+
+# ---------- 大体积二进制 ----------
+# 视频/音频成片走 GitHub Releases，不进 Git 历史
+*.mp4
+*.wav
+*.mov
+*.webm
+demo-video/*.mp3
+demo-video/song.mp3
+demo-video/sample_cut.wav
+ai-novel-writer-setup-*.exe
+
+# ---------- 上游参考源码（独立仓库，避免嵌套） ----------
+ai-novel-writer-src/
+
+# ---------- 环境 / SDK ----------
+android-env/
+.workbuddy/
+.wbapp_*.genie
+
+# ---------- 系统 ----------
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp

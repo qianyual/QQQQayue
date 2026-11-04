@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>errtest</title></head>
+<body>
+<pre id="errlog">BOOT</pre>
+<script>
+window.__errs = [];
+window.onerror = function(msg, src, line, col) {
+  var e = msg + " @" + src + ":" + line + ":" + col;
+  window.__errs.push(e);
+  document.getElementById("errlog").textContent = "ERRS: " + window.__errs.join(" || ");
+};
+window.addEventListener("unhandledrejection", function(ev) {
+  var e = "REJECTION: " + (ev.reason && ev.reason.stack || ev.reason);
+  window.__errs.push(e);
+  document.getElementById("errlog").textContent = "ERRS: " + window.__errs.join(" || ");
+});
+</script>
+<div id="app"></div>
+<script src="js/prompts.js"></script>
+<script src="js/llm.js"></script>
+<script src="js/db.js"></script>
+<script src="js/app.js"></script>
+<script>
+setTimeout(function() {
+  var info = "ERRS:" + (window.__errs.length ? window.__errs.join(" || ") : "none");
+  info += " | APP_LEN:" + document.getElementById("app").innerHTML.length;
+  document.title = info;
+  document.getElementById("errlog").textContent = info;
+}, 1500);
+</script>
+</body></html>

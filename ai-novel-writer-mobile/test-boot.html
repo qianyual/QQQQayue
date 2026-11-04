@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>boottest</title><script src="/slow.js"></script></head>
+<body>
+<pre id="log">start</pre>
+<div id="app"></div>
+<script src="js/prompts.js"></script>
+<script src="js/llm.js"></script>
+<script src="js/db.js"></script>
+<script src="js/app.js"></script>
+<script>
+const log = (m) => { document.getElementById("log").textContent += "\n" + m; };
+window.addEventListener("error", (e) => log("WINDOW ERROR: " + e.message + " @" + (e.filename||"").split("/").pop() + ":" + e.lineno));
+window.addEventListener("unhandledrejection", (e) => log("REJECTION: " + (e.reason && e.reason.message || e.reason)));
+(async () => {
+  try {
+    const mode = await DB.detect();
+    log("storage mode = " + mode);
+    State.settings = Object.assign({ theme: "auto", models: [], defaultModelId: "", stageModels: {} }, await DB.kvGet("settings", {}));
+
+    // 1) 书架渲染
+    await render();
+    const shelfHtml = document.getElementById("app").innerHTML;
+    log("T1 shelf: len=" + shelfHtml.length + " hasTitle=" + shelfHtml.includes("书房"));
+
+    // 2) 新建作品 → 作品页(设定)
+    const novel = DB.newNovel("测试书");
+    novel.config.genre = "都市"; novel.config.totalChapters = 20;
+    await DB.putNovel(novel);
+    State.novel = novel;
+    nav({ page: "novel", novelId: novel.id, tab: "setup" });
+    await new Promise(r => setTimeout(r, 50));
+    const setupHtml = document.getElementById("app").innerHTML;
+    log("T2 setup: hasName=" + setupHtml.includes("测试书") + " hasAI=" + setupHtml.includes("AI 补全"));
+
+    // 3) 架构页
+    nav({ page: "novel", novelId: novel.id, tab: "arch" });
+    await new Promise(r => setTimeout(r, 50));
+    log("T3 arch: hasChars=" + document.getElementById("app").innerHTML.includes("角色名单"));
+
+    // 4) 蓝图页
+    novel.blueprints.push({ chapterNumber: 1, title: "雾夜", purpose: "开场", keyEvents: "守塔人救下漂流瓶", characters: ["林岚"], suspenseHook: "瓶中传出声音" });
+    novel.synopsis = "起：守塔人捡到漂流瓶；承：瓶子里的声音指引；转：灯塔秘密；合：真相。";
+    nav({ page: "novel", novelId: novel.id, tab: "blueprint" });
+    await new Promise(r => setTimeout(r, 50));
+    const bpHtml = document.getElementById("app").innerHTML;
+    log("T4 blueprint: hasBP=" + bpHtml.includes("雾夜") + " fromVal=" + ($("#bp-from") && $("#bp-from").value));
+
+    // 5) 章节编辑页 + 写章 prompt 组装
+    nav({ page: "chapter", novelId: novel.id, chNum: 1 });
+    await new Promise(r => setTimeout(r, 50));
+    const chHtml = document.getElementById("app").innerHTML;
+    log("T5 chapter: hasEditor=" + chHtml.includes("ch-editor") + " toolbar=" + chHtml.includes("AI 写本章"));
+    const msgs = buildChapterPrompt(novel, 1, getBlueprint(novel, 1), getChapter(novel, 1));
+    log("T6 prompt: msgs=" + msgs.length + " userLen=" + msgs[1].content.length + " noLeftover=" + !msgs[1].content.includes("{{"));
+
+    // 7) 提取 JSON 工具
+    const obj = LLM.extractJSON('前言```json\n[{"a":1},{"b":"x"}]\n```后记');
+    log("T7 extractJSON: ok=" + (obj.length === 2));
+
+    // 8) 导出/备份内容
+    const saved = await DB.getNovel(novel.id);
+    log("T8 persist: name=" + saved.name + " chapters=" + saved.chapters.length + " bp=" + saved.blueprints.length);
+
+    // 9) 清理
+    await DB.deleteNovel(novel.id);
+    const after = await DB.listNovels();
+    log("T9 cleanup: novels=" + after.length);
+    log("ALL DONE");
+  } catch (e) {
+    log("CAUGHT: " + (e && e.stack || e));
+  }
+})();
+</script>
+</body></html>

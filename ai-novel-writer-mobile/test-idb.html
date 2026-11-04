@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>idbtest</title></head>
+<body>
+<pre id="log">start</pre>
+<script>
+const log = (m) => { document.getElementById("log").textContent += "\n" + m; };
+try {
+  const req = indexedDB.open("probe-db", 1);
+  log("open() called, no sync exception");
+  req.onupgradeneeded = () => log("upgradeneeded");
+  req.onsuccess = () => { log("onsuccess, v=" + req.result.version); document.title = "IDB_OK"; };
+  req.onerror = () => { log("onerror: " + req.error); document.title = "IDB_ERR"; };
+  req.onblocked = () => log("onblocked");
+} catch (e) { log("EXCEPTION: " + e); }
+setTimeout(() => { log("timeout 3s marker"); }, 3000);
+</script>
+</body></html>

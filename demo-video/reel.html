@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>书童 · 竖屏介绍</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1080px;height:1920px;overflow:hidden;background:#0d0b09}
+  #stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;
+    transform-origin:50% 50%;background:#f6f0e3;
+    font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;color:#1b1915;
+    -webkit-font-smoothing:antialiased}
+  .serif{font-family:"Songti SC","STZhongsong","SimSun",serif}
+  .num{font-family:"Songti SC","STZhongsong","SimSun",serif;font-variant-numeric:tabular-nums}
+  .scene{position:absolute;left:0;top:0;width:1080px;height:1920px;opacity:0;visibility:hidden;overflow:hidden}
+  .u{position:absolute;will-change:transform,opacity}
+  img{display:block;-webkit-user-drag:none}
+
+  .paper{background:radial-gradient(92% 58% at 50% 0%,#fffdf7 0%,#f7f1e4 54%,#ebe1cd 100%)}
+  .paper::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:repeating-linear-gradient(180deg,rgba(27,25,21,0) 0 122px,rgba(27,25,21,.036) 122px 123px)}
+  .dark{background:radial-gradient(85% 55% at 50% 28%,#1f1b17 0%,#131110 58%,#0a0807 100%)}
+
+  /* 整屏手机卡片 */
+  .hero{position:absolute;width:780px;height:1688px;overflow:hidden;border-radius:46px;
+    box-shadow:0 70px 130px -34px rgba(0,0,0,.75),0 0 0 2px rgba(247,242,230,.14),0 0 0 10px rgba(247,242,230,.04)}
+  .hero img{position:absolute;left:0;top:0;width:780px;transform-origin:50% 0%}
+  .hero .fade{position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(180deg,rgba(10,8,7,.6) 0%,rgba(10,8,7,.04) 15%,rgba(10,8,7,.2) 36%,
+      rgba(10,8,7,.9) 50%,#0b0908 60%,#0b0908 100%)}
+
+  .kicker{font-size:32px;letter-spacing:7px;color:#8a7f6b;font-weight:500}
+  .h1{font-size:112px;line-height:.97;letter-spacing:-4px;font-weight:600}
+  .h2{font-size:82px;line-height:1.06;letter-spacing:-2px;font-weight:600}
+  .h3{font-size:66px;line-height:1.14;letter-spacing:-1px;font-weight:600}
+  .body{font-size:40px;line-height:1.6;color:#5d5546}
+  .tiny{font-size:30px;letter-spacing:3px;color:#8a7f6b}
+
+  .chip{display:inline-flex;align-items:center;gap:12px;padding:15px 28px;border-radius:999px;
+    border:2px solid rgba(27,25,21,.15);background:rgba(255,253,247,.78);font-size:30px;color:#3a3428}
+  .chip b{color:#a2402c;font-weight:600}
+  .chip.dk{border-color:rgba(247,242,230,.24);background:rgba(18,15,13,.86);color:#f2ece0;
+    box-shadow:0 18px 40px -18px rgba(0,0,0,.8)}
+  .chip.dk b{color:#e8935f}
+
+  .seal{background:#a2402c;color:#fdf8ec;border-radius:10px;display:flex;align-items:center;justify-content:center;
+    text-align:center;font-family:"STKaiti","KaiTi","SimSun",serif;box-shadow:0 16px 34px -10px rgba(120,30,16,.6)}
+
+  #prog{position:absolute;left:0;top:0;height:5px;background:#a2402c;width:0;opacity:.9;z-index:30}
+  #beats{position:absolute;left:64px;bottom:52px;display:flex;gap:14px;z-index:30}
+  #beats i{display:block;width:46px;height:5px;border-radius:3px;background:rgba(27,25,21,.15)}
+  #vign{position:absolute;inset:0;pointer-events:none;z-index:25;box-shadow:inset 0 0 240px rgba(40,28,14,.22)}
+  #flash{position:absolute;inset:0;background:#fff6e4;opacity:0;pointer-events:none;z-index:28}
+  #fadeout{position:absolute;inset:0;background:#0d0b09;opacity:0;pointer-events:none;z-index:29}
+  #streaks{position:absolute;inset:0;pointer-events:none;z-index:26}
+  #streaks i{position:absolute;left:0;height:3px;width:1080px;opacity:0;
+    background:linear-gradient(90deg,rgba(162,64,44,0),rgba(162,64,44,.85),rgba(162,64,44,0))}
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- ================= S1 开场 ================= -->
+  <section class="scene paper" id="s1">
+    <div class="u" id="s1-ring" style="left:600px;top:-300px;width:820px;height:820px;border-radius:50%;
+      border:2px solid rgba(162,64,44,.28)"></div>
+    <div class="u" id="s1-ring2" style="left:-260px;top:1240px;width:560px;height:560px;border-radius:50%;
+      border:2px solid rgba(27,25,21,.10)"></div>
+    <div class="u kicker" id="s1-k" style="left:72px;top:246px">书童 · 安卓真机版</div>
+    <div class="u h1 serif" id="s1-t1" style="left:64px;top:306px">在手机上</div>
+    <div class="u h1 serif" id="s1-t2" style="left:64px;top:430px">写一整本</div>
+    <div class="u h1 serif" id="s1-t3" style="left:64px;top:554px;color:#a2402c">小说</div>
+    <div class="u" id="s1-line" style="left:72px;top:712px;width:0;height:6px;background:#1b1915;opacity:0"></div>
+    <div class="u body" id="s1-sub" style="left:72px;top:748px;width:620px">AI 生成、审稿纠错、章纲伏笔，<br>全在一个 App 里。</div>
+    <div class="u" id="s1-c1" style="left:72px;top:902px"><div class="chip">离线可用</div></div>
+    <div class="u" id="s1-c2" style="left:282px;top:902px"><div class="chip">AI 双模式</div></div>
+    <div class="u" id="s1-c3" style="left:540px;top:902px"><div class="chip">16 个技能</div></div>
+
+    <div class="u hero" id="s1-ph" style="left:446px;top:1004px">
+      <img src="../ui-shots/vid-shelf.png">
+      <div class="fade" style="background:linear-gradient(180deg,rgba(10,8,7,.30) 0%,rgba(10,8,7,0) 14%)"></div>
+    </div>
+    <div class="u" id="s1-glow" style="left:356px;top:952px;width:780px;height:130px;border-radius:50%;
+      background:radial-gradient(50% 50% at 50% 50%,rgba(162,64,44,.20),rgba(162,64,44,0))"></div>
+  </section>
+
+  <!-- ================= S2 双模式 ================= -->
+  <section class="scene dark" id="s2">
+    <div class="u" id="s2-glow" style="left:-160px;top:520px;width:1400px;height:1000px;border-radius:50%;
+      background:radial-gradient(50% 50% at 50% 50%,rgba(162,64,44,.20),rgba(162,64,44,0))"></div>
+    <div class="u kicker" id="s2-k" style="left:72px;top:250px;color:rgba(247,242,230,.5)">一个开关</div>
+    <div class="u h2 serif" id="s2-h" style="left:64px;top:308px;color:#f7f2e6">开着让 AI 写<br>关掉只让它看</div>
+
+    <div class="u" id="s2-sw" style="left:110px;top:670px;width:860px;height:430px">
+      <div style="position:absolute;left:0;top:0;width:860px;height:430px;border-radius:44px;
+        border:2px solid rgba(247,242,230,.14);background:rgba(247,242,230,.045)"></div>
+      <div id="s2-rowA" style="position:absolute;left:48px;top:58px;width:560px">
+        <div style="font-size:48px;color:#f7f2e6;letter-spacing:2px">AI 生成</div>
+        <div style="font-size:28px;color:rgba(247,242,230,.5);margin-top:12px;letter-spacing:1px">续写 · 拆章 · 润色</div>
+      </div>
+      <div id="s2-rowB" style="position:absolute;left:48px;top:258px;width:560px">
+        <div style="font-size:48px;color:rgba(247,242,230,.42);letter-spacing:2px">只做辅助</div>
+        <div style="font-size:28px;color:rgba(247,242,230,.32);margin-top:12px;letter-spacing:1px">查漏洞 · 纠错 · 不改正文</div>
+      </div>
+      <div id="s2-track" style="position:absolute;left:668px;top:62px;width:124px;height:306px;border-radius:999px;
+        background:rgba(247,242,230,.10);border:2px solid rgba(247,242,230,.2)"></div>
+      <div id="s2-knob" style="position:absolute;left:680px;top:74px;width:100px;height:100px;border-radius:50%;
+        background:#f7f2e6;box-shadow:0 12px 28px rgba(0,0,0,.45)"></div>
+      <div id="s2-ring" style="position:absolute;left:660px;top:56px;width:140px;height:154px;border-radius:999px;
+        border:3px solid #a2402c;opacity:0"></div>
+    </div>
+
+    <div class="u" id="s2-lock" style="left:110px;top:1170px;padding:26px 44px;border-radius:999px;background:#a2402c;
+      color:#fdf8ec;font-size:40px;letter-spacing:2px;box-shadow:0 26px 60px -18px rgba(162,64,44,.85)">
+      生成已锁 · 只剩审稿</div>
+
+    <div class="u tiny" id="s2-f1" style="left:72px;top:1330px;width:900px;color:rgba(247,242,230,.52);line-height:1.75;font-size:32px">
+      辅助模式下，续写、拆章、润色的入口全部消失，<br>只留下逻辑硬伤、错字、AI 味这些检查。</div>
+
+    <div class="u" id="s2-f2" style="left:72px;top:1480px;width:880px;padding:28px 32px;border-left:4px solid #a2402c;
+      background:rgba(247,242,230,.05);font-size:32px;line-height:1.7;color:rgba(247,242,230,.8)">
+      不是提醒你"别用"，是入口根本不出现。</div>
+  </section>
+
+  <!-- ================= S3 技能 ================= -->
+  <section class="scene paper" id="s3">
+    <div class="u kicker" id="s3-k" style="left:72px;top:226px">审稿 · 纠错 · 打磨 · 章纲 · 创意</div>
+    <div class="u h2 serif" id="s3-h" style="left:64px;top:284px">16 种<span style="color:#a2402c">审稿视角</span></div>
+    <div id="s3-grid" class="u" style="left:72px;top:470px;width:936px;height:936px"></div>
+    <div class="u tiny" id="s3-f" style="left:72px;top:1440px">一次全跑 · 按勾选改 · 改完自动复验</div>
+
+    <div class="u hero" id="s3-report" style="left:150px;top:600px;height:1320px;opacity:0">
+      <img src="../ui-shots/v16-report.png">
+    </div>
+    <div class="u" id="s3-badge" style="left:110px;top:700px;padding:18px 32px;border-radius:16px;background:#1b1915;
+      color:#f7f2e6;font-size:32px;letter-spacing:2px;opacity:0">12 处待改</div>
+  </section>
+
+  <!-- ================= S4 章纲罗盘 ================= -->
+  <section class="scene dark" id="s4">
+    <div class="u hero" id="s4-hero" style="left:150px;top:150px">
+      <img src="../ui-shots/v16-compass.png" id="s4-img">
+      <div class="fade"></div>
+    </div>
+    <div class="u kicker" id="s4-k" style="left:72px;top:1032px;color:rgba(247,242,230,.55)">章纲罗盘</div>
+    <div class="u h3 serif" id="s4-h" style="left:64px;top:1082px;width:900px;color:#f7f2e6">写之前就知道<br>这章要干什么</div>
+    <div class="u" id="s4-c1" style="left:64px;top:1290px"><div class="chip dk">节拍 3 / 5 <b>✓</b></div></div>
+    <div class="u" id="s4-c2" style="left:404px;top:1290px"><div class="chip dk">待埋伏笔 <b>2</b></div></div>
+    <div class="u" id="s4-c3" style="left:64px;top:1396px"><div class="chip dk">张力 <b>★★★</b>★★</div></div>
+    <div class="u" id="s4-c4" style="left:64px;top:1510px;width:860px;font-size:30px;line-height:1.7;color:rgba(247,242,230,.6)">
+      张力不够它会拦你：这一章太平，建议加一个反转。</div>
+  </section>
+
+  <!-- ================= S5 码字仪表 ================= -->
+  <section class="scene paper" id="s5">
+    <div class="u" id="s5-ring" style="left:700px;top:180px;width:520px;height:520px;border-radius:50%;
+      border:2px solid rgba(162,64,44,.16)"></div>
+    <div class="u kicker" id="s5-k" style="left:72px;top:250px">码字仪表</div>
+    <div class="u" id="s5-lab" style="left:66px;top:312px;font-size:44px;color:#6f6656;letter-spacing:2px">今日已写</div>
+    <div class="u num" id="s5-num" style="left:56px;top:376px;font-size:266px;line-height:1;letter-spacing:-8px;white-space:nowrap">
+      0<span style="font-size:110px;color:#a2402c">字</span></div>
+    <div class="u" id="s5-bar" style="left:66px;top:756px;width:948px;height:14px;border-radius:8px;background:rgba(27,25,21,.11)">
+      <div id="s5-goal" style="position:absolute;left:0;top:0;width:0;height:14px;border-radius:8px;background:#1b1915;opacity:.18"></div>
+      <div id="s5-fill" style="position:absolute;left:0;top:0;width:0;height:14px;border-radius:8px;
+        background:linear-gradient(90deg,#a2402c,#d98a5a)"></div>
+    </div>
+    <div class="u tiny" id="s5-gt" style="left:66px;top:794px">目标 2000 字</div>
+
+    <div class="u" id="s5-fish" style="left:66px;top:900px;width:948px;padding:34px 38px;border-radius:30px;
+      background:rgba(255,253,247,.86);border:2px solid rgba(27,25,21,.09)">
+      <div style="font-size:32px;color:#6f6656;letter-spacing:2px">摸鱼计时</div>
+      <div id="s5-fn" class="num" style="font-size:92px;line-height:1.1;margin-top:6px">12<span style="font-size:42px"> 分 40 秒</span></div>
+      <div style="font-size:27px;color:#8a7f6b;margin-top:8px">超过 3 分钟变琥珀色，提醒你回来</div>
+    </div>
+
+    <div class="u hero" id="s5-pill" style="left:600px;top:1220px;width:420px;height:700px;border-radius:34px">
+      <img src="../ui-shots/v15-hud-panel.png" style="width:420px">
+      <div class="fade" style="background:linear-gradient(180deg,rgba(10,8,7,.3) 0%,rgba(10,8,7,0) 12%)"></div>
+    </div>
+    <div class="u body" id="s5-cap" style="left:66px;top:1260px;width:480px;font-size:36px;line-height:1.62">
+      悬浮窗跟着你走，<br>换个 App 也还在。</div>
+  </section>
+
+  <!-- ================= S6 资料库 ================= -->
+  <section class="scene dark" id="s6">
+    <div class="u hero" id="s6-hero" style="left:150px;top:150px">
+      <img src="../ui-shots/v18-materials.png" id="s6-img">
+      <div class="fade"></div>
+    </div>
+    <div class="u kicker" id="s6-k" style="left:72px;top:1010px;color:rgba(247,242,230,.55)">资料库</div>
+    <div class="u h3 serif" id="s6-h" style="left:64px;top:1058px;width:940px;color:#f7f2e6">写完这一章<br>它自己去翻你的资料</div>
+    <div class="u" id="s6-f" style="left:64px;top:1268px;width:940px;font-size:32px;line-height:1.75;color:rgba(247,242,230,.68)">
+      导进 txt / md / epub，切块建索引：写本章时按蓝图检索最相关的 4 段，续写时按前文尾检索 3 段。</div>
+    <div class="u" id="s6-badge" style="left:64px;top:1428px;padding:16px 28px;border-radius:14px;background:rgba(162,64,44,.92);
+      color:#fdf8ec;font-size:28px;letter-spacing:2px">中文 2-gram · 离线可用</div>
+  </section>
+
+  <!-- ================= S7 图谱 / 搜索 ================= -->
+  <section class="scene dark" id="s7">
+    <div class="u hero" id="s7-a" style="left:150px;top:150px">
+      <img src="../ui-shots/v14-graph.png" id="s7-ia">
+      <div class="fade"></div>
+    </div>
+    <div class="u hero" id="s7-b" style="left:150px;top:150px;opacity:0">
+      <img src="../ui-shots/v18-search.png" id="s7-ib">
+      <div class="fade"></div>
+    </div>
+    <div class="u" id="s7-ta" style="left:72px;top:1032px;width:900px">
+      <div class="kicker" style="color:rgba(247,242,230,.55)">关系图谱</div>
+      <div class="h3 serif" style="margin-top:16px;color:#f7f2e6">点一个角色<br>只看他那条线</div>
+    </div>
+    <div class="u" id="s7-tb" style="left:72px;top:1032px;width:900px;opacity:0">
+      <div class="kicker" style="color:rgba(247,242,230,.55)">全书搜索</div>
+      <div class="h3 serif" style="margin-top:16px;color:#f7f2e6">作品正文<br>角色线索一起搜</div>
+    </div>
+    <div class="u" id="s7-f" style="left:64px;top:1470px;width:900px;font-size:31px;line-height:1.7;color:rgba(247,242,230,.62)">
+      搜「那个穿灰大衣的人是谁」，一次搜完，不用翻章节。</div>
+  </section>
+
+  <!-- ================= S8 对比 ================= -->
+  <section class="scene paper" id="s8">
+    <div class="u kicker" id="s8-k" style="left:72px;top:232px">和电脑端比</div>
+    <div class="u h2 serif" id="s8-h" style="left:64px;top:288px">手机版<span style="color:#a2402c">差什么</span></div>
+    <div class="u" id="s8-head" style="left:64px;top:420px;width:952px;display:flex;align-items:flex-end;padding-bottom:16px;
+      border-bottom:3px solid rgba(27,25,21,.18)">
+      <div style="flex:1;font-size:28px;letter-spacing:3px;color:#8a7f6b">功能</div>
+      <div style="width:190px;text-align:center;font-size:30px;color:#a2402c;font-weight:600">手机</div>
+      <div style="width:190px;text-align:center;font-size:30px;color:#8a7f6b">PC</div>
+    </div>
+    <div id="s8-rows"></div>
+    <div class="u" id="s8-score" style="left:64px;top:1290px;width:952px;display:flex;align-items:center;opacity:0">
+      <div class="num" style="font-size:140px;line-height:.9;color:#a2402c">2</div>
+      <div style="margin-left:26px;font-size:29px;line-height:1.5;color:#6f6656">项手机独占<br>
+        <span style="color:#a2402c;font-size:27px">随身写 · 码字仪表</span></div>
+      <div style="width:2px;height:96px;background:rgba(27,25,21,.14);margin:0 46px"></div>
+      <div class="num" style="font-size:140px;line-height:.9;color:#8a7f6b">1</div>
+      <div style="margin-left:26px;font-size:29px;line-height:1.5;color:#6f6656">项 PC 独占<br>
+        <span style="font-size:27px">大屏改稿</span></div>
+    </div>
+    <div class="u" id="s8-f" style="left:64px;top:1470px;width:940px;font-size:30px;line-height:1.7;color:#6f6656">
+      唯一没追平的：大屏同时看两份稿子改长线。这一条留给你电脑。</div>
+  </section>
+
+  <!-- ================= S9 三连 ================= -->
+  <section class="scene dark" id="s9">
+    <div class="u hero" id="s9-a" style="left:150px;top:150px;opacity:0">
+      <img src="../ui-shots/v14-export.png" id="s9-ia">
+      <div class="fade"></div>
+    </div>
+    <div class="u hero" id="s9-b" style="left:150px;top:150px;opacity:0">
+      <img src="../ui-shots/v18-health.png" id="s9-ib">
+      <div class="fade"></div>
+    </div>
+    <div class="u hero" id="s9-c" style="left:150px;top:150px;opacity:0">
+      <img src="../ui-shots/v18-timeline.png" id="s9-ic">
+      <div class="fade"></div>
+    </div>
+    <div class="u" id="s9-l1" style="left:72px;top:1200px;width:900px">
+      <div class="kicker" style="color:rgba(247,242,230,.55)">导出</div>
+      <div class="h3 serif" style="margin-top:16px;color:#f7f2e6">分章 Markdown<br>TXT · JSON · EPUB</div>
+    </div>
+    <div class="u" id="s9-l2" style="left:72px;top:1200px;width:900px;opacity:0">
+      <div class="kicker" style="color:rgba(247,242,230,.55)">体检</div>
+      <div class="h3 serif" style="margin-top:16px;color:#f7f2e6">字数、伏笔、<br>断更风险一次看清</div>
+    </div>
+    <div class="u" id="s9-l3" style="left:72px;top:1200px;width:900px;opacity:0">
+      <div class="kicker" style="color:rgba(247,242,230,.55)">线索时间线</div>
+      <div class="h3 serif" style="margin-top:16px;color:#f7f2e6">哪条线索<br>埋了多久没收</div>
+    </div>
+  </section>
+
+  <!-- ================= S10 收尾 ================= -->
+  <section class="scene paper" id="s10">
+    <div class="u" id="s10-ring" style="left:-240px;top:1200px;width:780px;height:780px;border-radius:50%;
+      border:2px solid rgba(162,64,44,.22)"></div>
+    <div class="u serif" id="s10-big" style="left:64px;top:520px;font-size:226px;line-height:1;letter-spacing:-8px">书童</div>
+    <div class="u num" id="s10-ver" style="left:70px;top:790px;font-size:74px;color:#a2402c;letter-spacing:2px">1.8</div>
+    <div class="u serif" id="s10-h" style="left:66px;top:910px;font-size:62px;line-height:1.42;color:#3a3428">装到手机上，<br>今晚就能写。</div>
+    <div class="u" id="s10-line" style="left:72px;top:1130px;width:0;height:5px;background:#1b1915;opacity:0"></div>
+    <div class="u tiny" id="s10-info" style="left:72px;top:1166px;letter-spacing:4px">安卓 APK · 已签名 · 5.4MB</div>
+    <div class="u" id="s10-brand" style="left:72px;top:1252px;font-size:30px;color:#8a7f6b;letter-spacing:2px">基于开源项目 AI-Novel-Writer</div>
+    <div class="u seal" id="s10-seal" style="left:796px;top:566px;width:146px;height:146px;font-size:44px;line-height:1.1">
+      <span>书童</span></div>
+  </section>
+
+  <div id="prog"></div>
+  <div id="beats"><i></i><i></i><i></i><i></i></div>
+  <div id="streaks"><i style="top:420px"></i><i style="top:900px"></i><i style="top:1380px"></i></div>
+  <div id="flash"></div>
+  <div id="vign"></div>
+  <div id="fadeout"></div>
+</div>
+<script>
+/* ============================================================
+ * 竖屏短视频 · 113 BPM（原曲《若如初见》实测）
+ * 33 小节 = 132 拍 = 70.09s；1 拍 = 0.53097s；1 小节 = 2.1239s
+ * 切镜全部落在小节线；元素按 1/2、1/4 拍递进
+ * ============================================================ */
+const clamp = (v, a = 0, b = 1) => (v < a ? a : v > b ? b : v);
+const ease = t => 1 - Math.pow(1 - clamp(t), 3);
+const easeIO = t => { t = clamp(t); return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
+const snap = t => { t = clamp(t); const c = 2.0; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); };
+const lerp = (a, b, p) => a + (b - a) * p;
+const q = id => document.getElementById(id);
+
+const BPM = 113, BEAT = 60 / BPM, BAR = BEAT * 4;
+const pL = (b, s, d) => clamp((b - s) / d);
+const pE = (b, s, d) => ease((b - s) / d);
+const pS = (b, s, d) => snap((b - s) / d);
+
+const SC = {
+  s1: [0, 3], s2: [3, 6], s3: [6, 10], s4: [10, 13], s5: [13, 16],
+  s6: [16, 19], s7: [19, 22], s8: [22, 26], s9: [26, 29], s10: [29, 33],
+};
+const DIR = { s1: 1, s2: 1, s3: -1, s4: 1, s5: -1, s6: 1, s7: -1, s8: 1, s9: -1, s10: 1 };
+const CUTS = [3, 6, 10, 13, 16, 19, 22, 26, 29];
+const DURATION = 33 * BAR;
+
+/* ---------------- 构建：16 技能格 ---------------- */
+const SKILLS = [
+  "逻辑硬伤", "设定连续性", "节奏诊断", "伏笔呼应",
+  "动机与选择", "视角与信息", "章末钩子", "场景可视化",
+  "错字与病句", "AI 味检测", "重复与口头禅", "对话质感",
+  "文风教练", "角色弧检查", "拆本章节拍", "卡文破局",
+];
+(function buildGrid() {
+  const g = q("s3-grid");
+  const W = 216, G = 24;
+  SKILLS.forEach((name, i) => {
+    const col = i % 4, row = (i / 4) | 0;
+    const el = document.createElement("div");
+    el.id = "sk" + i;
+    el.style.cssText = `position:absolute;left:${col * (W + G)}px;top:${row * (W + G)}px;width:${W}px;height:${W}px;
+      border-radius:28px;background:rgba(255,253,247,.94);border:2px solid rgba(27,25,21,.09);
+      box-shadow:0 22px 40px -26px rgba(20,14,8,.45);padding:22px 20px;overflow:hidden`;
+    el.innerHTML = `<div class="num" style="font-size:22px;color:#a2402c;letter-spacing:2px">${String(i + 1).padStart(2, "0")}</div>
+      <div class="serif" style="position:absolute;left:20px;bottom:26px;right:14px;font-size:30px;
+        line-height:1.2;letter-spacing:-1px;white-space:nowrap">${name}</div>`;
+    g.appendChild(el);
+  });
+})();
+
+/* ---------------- 构建：对比表 ---------------- */
+const ROWS = [
+  ["随身随时写", "✓", "—"],
+  ["AI 生成 / 续写", "✓", "✓"],
+  ["16 个审稿技能", "✓", "✓"],
+  ["码字速度仪表", "✓", "—"],
+  ["资料库检索", "✓", "✓"],
+  ["大屏改稿", "—", "✓"],
+];
+(function buildRows() {
+  const box = q("s8-rows");
+  box.className = "u";
+  box.style.cssText = "position:absolute;left:64px;top:470px;width:952px";
+  ROWS.forEach(([name, a, c], i) => {
+    const last = i === ROWS.length - 1;
+    const el = document.createElement("div");
+    el.id = "rw" + i;
+    el.style.cssText = `display:flex;align-items:center;height:${last ? 120 : 130}px;
+      border-bottom:${last ? "none" : "2px solid rgba(27,25,21,.10)"}`;
+    el.innerHTML = `<div style="flex:1;font-size:40px;letter-spacing:1px;color:${last ? "#a2402c" : "#2b2720"}">${name}</div>
+      <div style="width:190px;text-align:center;font-size:44px;color:${a === "✓" ? "#a2402c" : "rgba(27,25,21,.22)"}">${a}</div>
+      <div style="width:190px;text-align:center;font-size:44px;color:${c === "✓" ? "#6f6656" : "rgba(27,25,21,.22)"}">${c}</div>`;
+    box.appendChild(el);
+  });
+})();
+
+/* ---------------- 场景进出（硬切 + 快甩） ---------------- */
+const DARK = { s2: 1, s4: 1, s6: 1, s7: 1, s9: 1 };
+function sceneShow(b) {
+  let cur = "s1";
+  for (const id in SC) {
+    const [s, e] = SC[id], bs = s * 4, be = e * 4;
+    const inside = b >= bs - 0.001 && b < be - 0.001;
+    if (inside) cur = id;
+    const el = q(id);
+    if (!inside) { el.style.opacity = 0; el.style.visibility = "hidden"; continue; }
+    /* 只在切点做 0.05 拍的极短过渡，避免单帧空屏 */
+    const a = Math.min(clamp((b - bs) / 0.05), clamp((be - b) / 0.05));
+    el.style.opacity = a;
+    el.style.visibility = "visible";
+    const p = clamp((b - bs) / 0.42);
+    const sc = 1 + 0.055 * (1 - easeIO(p));
+    el.style.transform = `translate3d(0,0,0) scale(${sc})`;
+  }
+  q("stage").style.background = DARK[cur] ? "#0d0b09" : "#f2ead9";
+}
+
+/* ---------------- S1 开场 ---------------- */
+function sc1(b) {
+  q("s1-ring").style.transform = `rotate(${b * 2.4}deg)`;
+  q("s1-ring2").style.transform = `rotate(${-b * 1.8}deg) translate3d(0,${Math.sin(b * 0.5) * 14}px,0)`;
+
+  const k = pE(b, 0.03, 0.45);
+  q("s1-k").style.opacity = k;
+  q("s1-k").style.transform = `translate3d(0,${lerp(26, 0, k)}px,0)`;
+
+  [["s1-t1", 0.32], ["s1-t2", 0.68], ["s1-t3", 1.04]].forEach(([id, st]) => {
+    const p = pS(b, st, 0.8);
+    const el = q(id);
+    el.style.opacity = pE(b, st, 0.3);
+    el.style.transformOrigin = "0% 100%";
+    el.style.transform = `translate3d(0,${lerp(112, 0, p)}px,0) scale(${lerp(1.14, 1, p)}) rotate(${lerp(2.4, 0, p)}deg)`;
+  });
+
+  const l = pE(b, 1.82, 0.6);
+  q("s1-line").style.opacity = l;
+  q("s1-line").style.width = lerp(0, 96, l) + "px";
+  const s = pE(b, 2.0, 0.7);
+  q("s1-sub").style.opacity = s;
+  q("s1-sub").style.transform = `translate3d(0,${lerp(24, 0, s)}px,0)`;
+
+  [["s1-c1", 2.62], ["s1-c2", 2.84], ["s1-c3", 3.06]].forEach(([id, st]) => {
+    const p = pS(b, st, 0.55);
+    const el = q(id);
+    el.style.opacity = pE(b, st, 0.28);
+    el.style.transform = `translate3d(0,${lerp(34, 0, p)}px,0) scale(${lerp(0.84, 1, p)})`;
+  });
+
+  const pp = pS(b, 1.36, 1.6);
+  const push = 1 + 0.09 * easeIO((b - 9.9) / 2.0);
+  q("s1-ph").style.opacity = pE(b, 1.36, 0.7);
+  q("s1-ph").style.transformOrigin = "50% 4%";
+  q("s1-ph").style.transform =
+    `translate3d(${lerp(210, 0, pp)}px,${lerp(96, 0, pp) + Math.sin(b * 0.9) * 7}px,0) ` +
+    `rotate(${lerp(9, -2.6, pp)}deg) scale(${lerp(0.9, 1, pp) * push})`;
+  q("s1-glow").style.opacity = pE(b, 2.1, 0.9) * 0.95;
+}
+
+/* ---------------- S2 双模式 ---------------- */
+function sc2(b) {
+  const gl = pE(b, 12.0, 1.2);
+  q("s2-glow").style.opacity = gl * 0.9;
+  q("s2-glow").style.transform = `translate3d(0,${Math.sin(b * 0.6) * 20}px,0)`;
+
+  const k = pE(b, 12.02, 0.45);
+  q("s2-k").style.opacity = k; q("s2-k").style.transform = `translate3d(0,${lerp(24, 0, k)}px,0)`;
+  const h = pS(b, 12.07, 0.85);
+  q("s2-h").style.opacity = pE(b, 12.07, 0.32);
+  q("s2-h").style.transform = `translate3d(0,${lerp(74, 0, h)}px,0) scale(${lerp(1.06, 1, h)})`;
+
+  const sw = pS(b, 12.7, 1.0);
+  q("s2-sw").style.opacity = pE(b, 12.7, 0.45);
+  q("s2-sw").style.transform = `translate3d(0,${lerp(90, 0, sw)}px,0) scale(${lerp(0.92, 1, sw)})`;
+
+  /* 拨动：14.3 起 1.3 拍滑到底 */
+  const mv = easeIO((b - 14.3) / 1.3);
+  q("s2-knob").style.top = lerp(74, 262, mv) + "px";
+  q("s2-ring").style.top = lerp(56, 244, mv) + "px";
+  q("s2-ring").style.opacity = clamp((b - 14.28) / 0.28) * (1 - clamp((b - 16.4) / 0.4));
+  q("s2-rowA").style.opacity = lerp(1, 0.26, mv);
+  q("s2-rowB").style.opacity = lerp(0.3, 1, mv);
+  q("s2-knob").style.background = mv > 0.58 ? "#a2402c" : "#f7f2e6";
+
+  const lk = pS(b, 15.8, 0.8);
+  q("s2-lock").style.opacity = pE(b, 15.8, 0.35);
+  q("s2-lock").style.transform = `translate3d(0,${lerp(54, 0, lk)}px,0) scale(${lerp(0.86, 1, lk)}) rotate(${lerp(4, 0, lk)}deg)`;
+
+  const f1 = pE(b, 16.4, 0.7);
+  q("s2-f1").style.opacity = f1 * 0.96;
+  q("s2-f1").style.transform = `translate3d(0,${lerp(20, 0, f1)}px,0)`;
+
+  const f2 = pS(b, 22.2, 0.9);
+  q("s2-f2").style.opacity = pE(b, 22.2, 0.4);
+  q("s2-f2").style.transform = `translate3d(${lerp(-46, 0, f2)}px,0,0)`;
+}
+
+/* ---------------- S3 技能 ---------------- */
+function sc3(b) {
+  const k = pE(b, 24.02, 0.45);
+  q("s3-k").style.opacity = k; q("s3-k").style.transform = `translate3d(0,${lerp(22, 0, k)}px,0)`;
+  const h = pS(b, 24.07, 0.85);
+  q("s3-h").style.opacity = pE(b, 24.07, 0.32);
+  q("s3-h").style.transform = `translate3d(0,${lerp(72, 0, h)}px,0) scale(${lerp(1.05, 1, h)})`;
+
+  SKILLS.forEach((_, i) => {
+    const st = 24.34 + i * 0.19;
+    const p = pS(b, st, 0.5);
+    const el = q("sk" + i);
+    el.style.opacity = pE(b, st, 0.26);
+    el.style.transform = `translate3d(0,${lerp(60, 0, p)}px,0) scale(${lerp(0.8, 1, p)})`;
+  });
+
+  const pushBack = easeIO((b - 30.1) / 1.0);
+  q("s3-grid").style.transform = `translate3d(0,${lerp(0, -40, pushBack)}px,0) scale(${lerp(1, 0.93, pushBack)})`;
+  q("s3-grid").style.opacity = lerp(1, 0.26, pushBack);
+  q("s3-f").style.opacity = pE(b, 28.4, 0.6) * (1 - pushBack);
+
+  const rp = easeIO((b - 30.1) / 1.4);
+  q("s3-report").style.opacity = clamp((b - 30.0) / 0.45);
+  q("s3-report").style.transform = `translate3d(0,${lerp(940, 0, rp)}px,0)`;
+
+  const bd = pS(b, 31.8, 0.7);
+  q("s3-badge").style.opacity = pE(b, 31.8, 0.3);
+  q("s3-badge").style.transform = `translate3d(0,${lerp(-34, 0, bd)}px,0) scale(${lerp(0.78, 1, bd)}) rotate(-4deg)`;
+}
+
+/* ---------------- S4 章纲罗盘 ---------------- */
+function sc4(b) {
+  const en = easeIO((b - 40.02) / 1.1);
+  q("s4-hero").style.opacity = clamp((b - 40.0) / 0.4);
+  q("s4-hero").style.transform = `translate3d(0,${lerp(52, 0, en)}px,0) scale(${lerp(1.05, 1, en)})`;
+  q("s4-img").style.transform = `translateY(${lerp(0, -96, clamp((b - 40) / 12))}px) scale(${lerp(1, 1.05, clamp((b - 40) / 12))})`;
+
+  const k = pE(b, 40.04, 0.45);
+  q("s4-k").style.opacity = k;
+  q("s4-k").style.transform = `translate3d(0,${lerp(22, 0, k)}px,0)`;
+  const h = pS(b, 40.10, 0.9);
+  q("s4-h").style.opacity = pE(b, 40.10, 0.32);
+  q("s4-h").style.transform = `translate3d(0,${lerp(76, 0, h)}px,0) scale(${lerp(1.05, 1, h)})`;
+
+  [["s4-c1", 42.0], ["s4-c2", 42.5], ["s4-c3", 43.2]].forEach(([id, st]) => {
+    const p = pS(b, st, 0.65);
+    const el = q(id);
+    el.style.opacity = pE(b, st, 0.3);
+    el.style.transform = `translate3d(${lerp(-80, 0, p)}px,0,0)`;
+  });
+  const f = pE(b, 44.4, 0.8);
+  q("s4-c4").style.opacity = f;
+  q("s4-c4").style.transform = `translate3d(0,${lerp(26, 0, f)}px,0)`;
+}
+
+/* ---------------- S5 码字仪表 ---------------- */
+function sc5(b) {
+  q("s5-ring").style.transform = `rotate(${b * 1.4}deg) scale(${1 + 0.02 * clamp((b - 52) / 12)})`;
+  const k = pE(b, 52.02, 0.45);
+  q("s5-k").style.opacity = k; q("s5-k").style.transform = `translate3d(0,${lerp(22, 0, k)}px,0)`;
+  const lb = pE(b, 52.08, 0.55);
+  q("s5-lab").style.opacity = lb; q("s5-lab").style.transform = `translate3d(0,${lerp(26, 0, lb)}px,0)`;
+
+  const p = easeIO((b - 52.55) / 3.9);
+  const val = Math.round(1267 * p);
+  q("s5-num").innerHTML = `${val.toLocaleString("en-US")}<span style="font-size:110px;color:#a2402c;margin-left:16px">字</span>`;
+  q("s5-num").style.opacity = pE(b, 52.12, 0.3);
+  q("s5-num").style.transformOrigin = "4% 62%";
+  q("s5-num").style.transform = `translate3d(0,${lerp(60, 0, pE(b, 52.12, 0.7))}px,0) scale(${lerp(1.05, 1, Math.max(p, 0.001))})`;
+
+  q("s5-fill").style.width = (948 * (1267 / 2000) * p) + "px";
+  q("s5-goal").style.width = (948 * p) + "px";
+  const gt = pE(b, 53.1, 0.6);
+  q("s5-gt").style.opacity = gt * 0.9;
+
+  const fi = pS(b, 53.7, 0.9);
+  q("s5-fish").style.opacity = pE(b, 53.7, 0.4);
+  q("s5-fish").style.transform = `translate3d(0,${lerp(64, 0, fi)}px,0) scale(${lerp(0.94, 1, fi)})`;
+
+  const pl = pS(b, 54.6, 1.1);
+  q("s5-pill").style.opacity = pE(b, 54.6, 0.45);
+  q("s5-pill").style.transform = `translate3d(${lerp(140, 0, pl)}px,${lerp(60, 0, pl)}px,0) rotate(${lerp(9, 2.6, pl)}deg)`;
+
+  const cp = pE(b, 55.4, 0.7);
+  q("s5-cap").style.opacity = cp;
+  q("s5-cap").style.transform = `translate3d(0,${lerp(24, 0, cp)}px,0)`;
+}
+
+/* ---------------- S6 资料库 ---------------- */
+function sc6(b) {
+  const en = easeIO((b - 64.02) / 1.1);
+  q("s6-hero").style.opacity = clamp((b - 64.0) / 0.4);
+  q("s6-hero").style.transform = `translate3d(0,${lerp(52, 0, en)}px,0) scale(${lerp(1.05, 1, en)})`;
+  q("s6-img").style.transform = `translateY(${lerp(0, -110, clamp((b - 64) / 12))}px) scale(${lerp(1, 1.05, clamp((b - 64) / 12))})`;
+
+  const k = pE(b, 64.04, 0.45);
+  q("s6-k").style.opacity = k; q("s6-k").style.transform = `translate3d(0,${lerp(22, 0, k)}px,0)`;
+  const h = pS(b, 64.10, 0.9);
+  q("s6-h").style.opacity = pE(b, 64.10, 0.32);
+  q("s6-h").style.transform = `translate3d(0,${lerp(76, 0, h)}px,0) scale(${lerp(1.05, 1, h)})`;
+
+  const f = pE(b, 66.3, 0.9);
+  q("s6-f").style.opacity = f;
+  q("s6-f").style.transform = `translate3d(0,${lerp(30, 0, f)}px,0)`;
+  const bd = pS(b, 67.6, 0.7);
+  q("s6-badge").style.opacity = pE(b, 67.6, 0.3);
+  q("s6-badge").style.transform = `translate3d(0,${lerp(28, 0, bd)}px,0) scale(${lerp(0.86, 1, bd)})`;
+}
+
+/* ---------------- S7 图谱 → 搜索 ---------------- */
+function sc7(b) {
+  const sw = 82;
+  const wA = 1 - clamp((b - (sw - 0.32)) / 0.4);
+  const wB = clamp((b - sw) / 0.42);
+
+  q("s7-a").style.opacity = wA;
+  q("s7-a").style.transform = `translate3d(${lerp(0, -300, 1 - wA)}px,0,0) scale(${lerp(1.06, 1.02, wA)})`;
+  q("s7-b").style.opacity = wB;
+  q("s7-b").style.transform = `translate3d(${lerp(300, 0, easeIO(wB))}px,0,0) scale(${lerp(1.06, 1.0, easeIO(wB))})`;
+
+  q("s7-ia").style.transform = `translateY(${-400 - 40 * clamp((b - 76) / 6)}px)`;
+  q("s7-ib").style.transform = `translateY(${-380 - 40 * clamp((b - 82) / 6)}px)`;
+
+  q("s7-ta").style.opacity = 1 - clamp((b - 81.6) / 0.3);
+  q("s7-ta").style.transform = `translate3d(${lerp(0, -80, 1 - (1 - clamp((b - 81.6) / 0.3)))}px,0,0)`;
+  const tb = pS(b, 82.1, 0.8);
+  q("s7-tb").style.opacity = pE(b, 82.1, 0.35);
+  q("s7-tb").style.transform = `translate3d(0,${lerp(56, 0, tb)}px,0)`;
+
+  const f = pE(b, 77.0, 0.8);
+  q("s7-f").style.opacity = f * 0.92;
+  q("s7-f").style.transform = `translate3d(0,${lerp(24, 0, f)}px,0)`;
+}
+
+/* ---------------- S8 对比 ---------------- */
+function sc8(b) {
+  const k = pE(b, 88.03, 0.45);
+  q("s8-k").style.opacity = k; q("s8-k").style.transform = `translate3d(0,${lerp(22, 0, k)}px,0)`;
+  const h = pS(b, 88.07, 0.85);
+  q("s8-h").style.opacity = pE(b, 88.07, 0.32);
+  q("s8-h").style.transform = `translate3d(0,${lerp(70, 0, h)}px,0) scale(${lerp(1.05, 1, h)})`;
+
+  const hd = pE(b, 88.2, 0.6);
+  q("s8-head").style.opacity = hd;
+  q("s8-head").style.transform = `translate3d(0,${lerp(24, 0, hd)}px,0)`;
+
+  ROWS.forEach((_, i) => {
+    const st = 88.5 + i * 0.46;
+    const p = pS(b, st, 0.5);
+    const el = q("rw" + i);
+    el.style.opacity = pE(b, st, 0.28);
+    el.style.transform = `translate3d(${lerp(76, 0, p)}px,0,0)`;
+  });
+
+  const f = pE(b, 92.0, 0.8);
+  q("s8-f").style.opacity = f;
+  q("s8-f").style.transform = `translate3d(0,${lerp(26, 0, f)}px,0)`;
+
+  const sc = pS(b, 92.5, 0.9);
+  q("s8-score").style.opacity = pE(b, 92.5, 0.35);
+  q("s8-score").style.transform = `translate3d(0,${lerp(48, 0, sc)}px,0) scale(${lerp(0.9, 1, sc)})`;
+  q("s8-score").style.transformOrigin = "0% 50%";
+
+  const drift = easeIO((b - 96) / 8);
+  q("s8-rows").style.transform = `translate3d(0,${lerp(0, -20, drift)}px,0)`;
+}
+
+/* ---------------- S9 三连快切 ---------------- */
+function sc9(b) {
+  const seg = [[104, 108, "s9-a", "s9-l1", "s9-ia"], [108, 112, "s9-b", "s9-l2", "s9-ib"],
+               [112, 116, "s9-c", "s9-l3", "s9-ic"]];
+  seg.forEach(([s, e, wrapId, labId, imgId]) => {
+    const a = Math.min(clamp((b - s) / 0.35), clamp((e - b) / 0.32));
+    const en = easeIO((b - s) / 0.9);
+    const el = q(wrapId);
+    el.style.opacity = a;
+    el.style.transform = `translate3d(0,${lerp(70, 0, en)}px,0) scale(${lerp(1.05, 1, en)})`;
+    q(imgId).style.transform = `translateY(${-400 - 50 * clamp((b - s) / 4)}px) scale(${lerp(1, 1.02, clamp((b - s) / 4))})`;
+
+    const lp = pS(b, s + 0.4, 0.65);
+    const lab = q(labId);
+    const out = clamp((e - b) / 0.3);
+    lab.style.opacity = pE(b, s + 0.4, 0.35) * out;
+    lab.style.transform = `translate3d(0,${lerp(70, 0, lp) - (1 - out) * 50}px,0)`;
+  });
+}
+
+/* ---------------- S10 收尾 ---------------- */
+function sc10(b) {
+  q("s10-ring").style.transform = `rotate(${-b * 1.8}deg) scale(${1 + 0.03 * clamp((b - 116) / 16)})`;
+  const big = pS(b, 116.08, 1.05);
+  q("s10-big").style.opacity = pE(b, 116.08, 0.32);
+  q("s10-big").style.transformOrigin = "0% 90%";
+  q("s10-big").style.transform = `translate3d(0,${lerp(150, 0, big)}px,0) scale(${lerp(1.12, 1, big)})`;
+
+  const v = pS(b, 117.1, 0.8);
+  q("s10-ver").style.opacity = pE(b, 117.1, 0.35);
+  q("s10-ver").style.transform = `translate3d(${lerp(-40, 0, v)}px,0,0)`;
+
+  const h = pE(b, 117.7, 0.8);
+  q("s10-h").style.opacity = h;
+  q("s10-h").style.transform = `translate3d(0,${lerp(40, 0, h)}px,0)`;
+
+  const l = pE(b, 118.6, 0.7);
+  q("s10-line").style.opacity = l;
+  q("s10-line").style.width = lerp(0, 120, l) + "px";
+  const i2 = pE(b, 118.9, 0.7);
+  q("s10-info").style.opacity = i2;
+  q("s10-info").style.transform = `translate3d(0,${lerp(18, 0, i2)}px,0)`;
+  const br = pE(b, 119.8, 0.8);
+  q("s10-brand").style.opacity = br;
+  q("s10-brand").style.transform = `translate3d(0,${lerp(18, 0, br)}px,0)`;
+
+  const se = pS(b, 120.6, 1.0);
+  q("s10-seal").style.opacity = clamp((b - 120.6) / 0.35);
+  q("s10-seal").style.transform = `scale(${lerp(0.42, 1.12, se) - Math.max(0, se - 1) * 0.12}) rotate(${lerp(-22, -7, se)}deg)`;
+  q("s10-seal").style.transformOrigin = '50% 50%';
+  q("s10-seal").style.boxShadow = `0 ${lerp(44, 16, se)}px ${lerp(70, 34, se)}px -10px rgba(120,30,16,${0.35 + 0.3 * se})`;
+}
+
+/* ---------------- 主渲染 ---------------- */
+const CUTS_SEC = CUTS.map(b => b * BAR);
+
+function render(t) {
+  const b = t / BEAT;
+
+  sceneShow(b);
+  sc1(b); sc2(b); sc3(b); sc4(b); sc5(b); sc6(b); sc7(b); sc8(b); sc9(b); sc10(b);
+
+  /* 每拍下压 + 小节首拍重拍 */
+  const ph = b - Math.floor(b);
+  const hit = Math.exp(-ph * 8.4);
+  const strong = Math.floor(b) % 4 === 0 ? 1 : 0.42;
+  q("stage").style.transform = `scale(${1 + 0.011 * hit * strong})`;
+
+  q("prog").style.width = (clamp(t / DURATION) * 1080) + "px";
+
+  const bi = Math.floor(b) % 4;
+  const lit = Math.exp(-ph * 5.5);
+  for (let i = 0; i < 4; i++) {
+    const el = q("beats").children[i];
+    el.style.background = i === bi ? `rgba(162,64,44,${0.34 + 0.66 * lit})` : "rgba(27,25,21,.13)";
+    el.style.transform = i === bi ? `scaleY(${1 + 1.2 * lit})` : "scaleY(1)";
+  }
+
+  /* 切镜时扫过的速度线 + 闪白 */
+  let fl = 0, st = -1;
+  for (const c of CUTS_SEC) { const d = t - c; if (d >= 0 && d < 0.34 && d > st) { st = d; fl = Math.exp(-d * 12); } }
+  q("flash").style.opacity = fl * 0.11;
+  const lines = q("streaks").children;
+  for (let i = 0; i < 3; i++) {
+    if (st < 0) { lines[i].style.opacity = 0; continue; }
+    const p = st / 0.34;
+    lines[i].style.opacity = (1 - p) * 0.32;
+    lines[i].style.transform = `translate3d(${lerp(-260, 340, p) - i * 40}px,0,0) scaleX(${lerp(0.35, 1.5, p)})`;
+  }
+
+  q("fadeout").style.opacity = clamp((t - (DURATION - 2.3)) / 2.3);
+  window.__t = t;
+}
+window.render = render;
+window.DURATION = DURATION;
+
+render(0);
+Promise.all(Array.from(document.images).map(im => im.complete ? 0 : new Promise(r => { im.onload = im.onerror = r; })))
+  .then(() => document.fonts.ready)
+  .then(() => { render(0); window.__ready = true; });
+
+</script>
+</body>
+</html>

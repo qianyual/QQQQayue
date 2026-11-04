@@ -1,0 +1,11 @@
+{
+  "appId": "com.shutong.novelwriter",
+  "appName": "书童",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false
+  }
+}

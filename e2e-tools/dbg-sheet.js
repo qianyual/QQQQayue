@@ -1,0 +1,24 @@
+const { chromium } = require("playwright-core");
+const EDGE = "C://Program Files (x86)//Microsoft//Edge//Application//msedge.exe";
+(async () => {
+  const b = await chromium.launch({ executablePath: EDGE, headless: true });
+  const p = await b.newPage({ viewport: { width: 390, height: 844 } });
+  p.on("pageerror", e => console.log("PAGEERR:", e.message));
+  p.on("console", m => { if (m.type() === "error") console.log("CONSOLE:", m.text()); });
+  await p.goto("http://127.0.0.1:4173/index.html", { waitUntil: "networkidle" });
+  await p.waitForTimeout(500);
+  await p.click("#btn-new");
+  await p.fill("#np-name", "调试书");
+  await p.click("#np-blank");
+  await p.waitForTimeout(400);
+  await p.click("#sf-done");
+  await p.waitForTimeout(300);
+  console.log("has ch-add:", await p.evaluate(() => !!document.querySelector("#ch-add")));
+  await p.click("#ch-add");
+  await p.waitForTimeout(500);
+  console.log("modal children:", await p.evaluate(() => document.querySelector("#modal-layer").children.length));
+  console.log("modal html head:", await p.evaluate(() => document.querySelector("#modal-layer").innerHTML.slice(0, 300)));
+  console.log("data-ch count:", await p.evaluate(() => document.querySelectorAll("[data-ch]").length));
+  console.log("sheet inputs:", await p.evaluate(() => [...document.querySelectorAll("#modal-layer input,#modal-layer textarea")].map(e => e.getAttribute("data-ch") || e.getAttribute("data-cf") || e.id).slice(0,10)));
+  await b.close();
+})();
